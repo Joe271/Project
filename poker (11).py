@@ -326,7 +326,7 @@ class Menu():
         screen.blit(assets.menuButton, (390,585.5))
 
         screen.blit(assets.playText, (587,200))
-        screen.blit(assets.saveText, (579.5,3000))
+        screen.blit(assets.saveText, (579.5,300))
         screen.blit(assets.loadText, (579.5,400))
         screen.blit(assets.helpText, (582.5,500))
         screen.blit(assets.exitText, (590.5,600))
