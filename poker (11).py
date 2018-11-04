@@ -5,7 +5,7 @@ from pygame.locals import *
 
 class Colours():
     white = pygame.Color(255,255,255)
-    black = pygame.Color(0,0,0)
+    black = pygame.Color(0,0,255)
     blue = pygame.Color(0, 75, 255)
 
 class Cards():
