@@ -133,7 +133,7 @@ class Game():
 
         ## Variables
 
-        self.turn = 0
+        self.playerTurn = True
         self.bet = 0
         self.playerCardsX = 567
         self.flopX = 850
@@ -232,8 +232,8 @@ class Game():
                                     self.bet = self.bet + 50
                                     user.Chips = user.Chips - 50
                                     self.userBetText = assets.inGameFont.render(str(self.bet), True, Colours.black)
-                                    screen.blit(self.userBetText,(1020,640))
                                     self.userChipsText = assets.inGameFont.render(str(user.Chips), True, Colours.black)
+                                    screen.blit(self.userBetText,(1020,640))
                                     screen.blit(self.userChipsText,(450,640))
                                     self.upBetPress = pygame.transform.scale(assets.upBetPress, self.betButtonScale)
                                     screen.blit(self.upBetPress, (950,600))
@@ -241,6 +241,7 @@ class Game():
                                     time.sleep(0.12)
                                     screen.blit(self.upBet,(950,600))
                                     pygame.display.update()
+
                                 else:
                                     user.Chips = 0
 
@@ -253,8 +254,8 @@ class Game():
                                     self.bet = self.bet - 50
                                     user.Chips = user.Chips + 50
                                     self.userBetText = assets.inGameFont.render(str(self.bet), True, Colours.black)
-                                    screen.blit(self.userBetText,(1020,640))
                                     self.userChipsText = assets.inGameFont.render(str(user.Chips), True, Colours.black)
+                                    screen.blit(self.userBetText,(1020,640))
                                     screen.blit(self.userChipsText,(450,640))
                                     self.downBetPress = pygame.transform.scale(assets.downBetPress, self.betButtonScale)
                                     screen.blit(self.downBetPress, (950,660))
@@ -262,6 +263,7 @@ class Game():
                                     time.sleep(0.12)
                                     screen.blit(self.downBet,(950,660))
                                     pygame.display.update()
+
                                 else:
                                     user.Chips = 5000
 
@@ -279,6 +281,7 @@ class Game():
                                     screen.blit(self.userBetText,(1020,640))
                                     pygame.display.update()
                                     self.betting = False
+
                                 else:
                                     pass
 
