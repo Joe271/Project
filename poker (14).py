@@ -127,6 +127,7 @@ class Assets():
         self.computerChipsText = self.inGameFont.render("5000", True, Colours.black)
         self.chipsText = self.inGameFont.render("Chips:", True, Colours.black)
         self.potText = self.inGameFont.render("Pot: 0", True, (Colours.black))
+        self.helpButtonText = self.menuFont.render("Next", True, (Colours.black))
 
 assets = Assets()
 
@@ -342,23 +343,23 @@ class Help():
         self.help15 = assets.helpFont.render("pair you may not want to bet as much as if you", True, Colours.white)
         self.help16 = assets.helpFont.render("had a flush or straight.", True, Colours.white)
 
-        def page1(self):
-            screen.blit(self.back, (0,0))
-            screen.blit(self.helpPage1, (497,10))
-            screen.blit(self.help1, (20, 100))
-            screen.blit(self.help2, (20, 150))
-            screen.blit(self.help3, (20, 200))
-            screen.blit(self.help4, (20, 250))
-            screen.blit(self.help5, (20, 300))
-            screen.blit(self.help6, (20, 350))
-            screen.blit(self.help7, (20, 400))
-            screen.blit(self.help8, (20, 450))
-            screen.blit(self.help9, (20, 500))
+        screen.blit(self.back, (0,0))
+        screen.blit(self.helpPage1, (497,10))
+        screen.blit(self.help1, (20, 100))
+        screen.blit(self.help2, (20, 150))
+        screen.blit(self.help3, (20, 200))
+        screen.blit(self.help4, (20, 250))
+        screen.blit(self.help5, (20, 300))
+        screen.blit(self.help6, (20, 350))
+        screen.blit(self.help7, (20, 400))
+        screen.blit(self.help8, (20, 450))
+        screen.blit(self.help9, (20, 500))
 
-            self.nextPage = pygame.transform.scale(assets.menuButton, (50,50))
-            screen.blit(self.nextPage, (500, 800))
+        self.nextPage = pygame.transform.scale(assets.menuButton, (175, 75))
+        screen.blit(self.nextPage, (1075, 620))
+        screen.blit(assets.helpButtonText, (1110, 625))
 
-            pygame.display.update()
+        pygame.display.update()
 
         def page2(self):
             screen.blit(self.helpPage2, (497, 10))
@@ -374,7 +375,7 @@ class Help():
                     pygame.quit()
                     sys.exit()
 
-        page1()
+        #page1()
 
 class Menu():
     def __init__(self):
