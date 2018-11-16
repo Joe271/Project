@@ -142,7 +142,7 @@ class Game():
         self.bigBlind = 100
         self.smallBlind = 50
 
-    def getAllCards(self):
+    def getCards(self):
         ## Gets cards for each player
 
         user.getUserCards()
@@ -151,7 +151,8 @@ class Game():
 
     def playGame(self):
 
-        self.getAllCards()
+        self.returnCards()
+        self.getCards()
 
         ## Displays all starting assets
         self.back = pygame.transform.scale(assets.back, (1280, 720))
@@ -198,7 +199,7 @@ class Game():
 
         pygame.display.update()
 
-        #time.sleep(1)
+        time.sleep(1)
 
         for z in range (2): #Displays all 4 player cards
             self.Card = pygame.image.load(user.Cards[z])
@@ -206,57 +207,71 @@ class Game():
             screen.blit(self.Card, (self.playerCardsX, 600))
             screen.blit(cards.backOfCard, (self.playerCardsX, 10))
             self.playerCardsX = self.playerCardsX + 75
-            #time.sleep(0.75)
+            time.sleep(0.75)
             pygame.display.update()
 
         self.playerCardsX = 567
 
         while True:
-            self.gamePress = pygame.transform.scale(assets.menuButtonPress, (100 ,50))
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if pygame.mouse.get_pos()[0] >= 723 and pygame.mouse.get_pos()[1] >= 600:
-                        if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 650:
-                            screen.blit(self.gamePress, (723, 600))
-                            screen.blit(assets.betButtonText, (726, 610))
-                            pygame.display.update()
-                            time.sleep(0.2)
-                            screen.blit(self.menuButton, (723, 600))
-                            screen.blit(assets.betButtonText, (726, 610))
-                            pygame.display.update()
-                            self.makeBet()
-                    if pygame.mouse.get_pos()[0] >=723 and pygame.mouse.get_pos()[1] >= 660:
-                        if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 710 and self.bet == 0:
-                            screen.blit(self.gamePress, (723, 660))
-                            screen.blit(assets.callButtonText, (726, 670))
-                            pygame.display.update()
-                            time.sleep(0.2)
-                            screen.blit(self.menuButton, (723, 660))
-                            screen.blit(assets.callButtonText, (726, 670))
-                            pygame.display.update()
-                            self.displayFlop()
-                    if pygame.mouse.get_pos()[0] >=833 and pygame.mouse.get_pos()[1] >= 600:
-                        if pygame.mouse.get_pos()[0] <= 933 and pygame.mouse.get_pos()[1] <= 650:
-                            screen.blit(self.gamePress, (833, 600))
-                            screen.blit(assets.foldButtonText, (838, 610))
-                            pygame.display.update()
-                            time.sleep(0.2)
-                            screen.blit(self.menuButton, (833, 600))
-                            screen.blit(assets.foldButtonText, (838, 610))
-                            pygame.display.update()
-                            self.returnCards()
-                            self.playGame()
+            if user.Chips >= 0:
+                self.gamePress = pygame.transform.scale(assets.menuButtonPress, (100 ,50))
+                for event in pygame.event.get():
+                    if event.type == QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if pygame.mouse.get_pos()[0] >= 723 and pygame.mouse.get_pos()[1] >= 600:
+                            if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 650:
+                                screen.blit(self.gamePress, (723, 600))
+                                screen.blit(assets.betButtonText, (726, 610))
+                                pygame.display.update()
+                                time.sleep(0.2)
+                                screen.blit(self.menuButton, (723, 600))
+                                screen.blit(assets.betButtonText, (726, 610))
+                                pygame.display.update()
+                                self.makeBet()
 
-                    if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
-                        if pygame.mouse.get_pos()[0] <= 205 and pygame.mouse.get_pos()[1] <= 695:
-                            screen.blit(help.backPagePress, (30, 620))
-                            screen.blit(assets.backButtonText, (65, 635))
-                            pygame.display.update()
-                            time.sleep(0.1)
-                            menu.displayMenu()
+                        if pygame.mouse.get_pos()[0] >=723 and pygame.mouse.get_pos()[1] >= 660:
+                            if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 710 and self.bet == 0:
+                                screen.blit(self.gamePress, (723, 660))
+                                screen.blit(assets.callButtonText, (726, 670))
+                                pygame.display.update()
+                                time.sleep(0.2)
+                                screen.blit(self.menuButton, (723, 660))
+                                screen.blit(assets.callButtonText, (726, 670))
+                                pygame.display.update()
+                                self.displayFlop()
+
+                        if pygame.mouse.get_pos()[0] >=833 and pygame.mouse.get_pos()[1] >= 600:
+                            if pygame.mouse.get_pos()[0] <= 933 and pygame.mouse.get_pos()[1] <= 650:
+                                screen.blit(self.gamePress, (833, 600))
+                                screen.blit(assets.foldButtonText, (838, 610))
+                                pygame.display.update()
+                                time.sleep(0.2)
+                                screen.blit(self.menuButton, (833, 600))
+                                screen.blit(assets.foldButtonText, (838, 610))
+                                pygame.display.update()
+                                if user.Chips == 0:
+                                    user.Chips = -1
+                                self.returnCards()
+                                self.playGame()
+
+                        if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
+                            if pygame.mouse.get_pos()[0] <= 205 and pygame.mouse.get_pos()[1] <= 695:
+                                screen.blit(help.backPagePress, (30, 620))
+                                screen.blit(assets.backButtonText, (65, 635))
+                                pygame.display.update()
+                                time.sleep(0.1)
+                                menu.displayMenu()
+
+
+            elif user.Chips < 0:
+                self.lose()
+
+    def lose(self):
+        screen.blit(self.back, (0, 0))
+
+        pygame.display.update()
 
     def displayFlop(self):
         while self.flopX > 600:
@@ -326,7 +341,7 @@ class Game():
                                     time.sleep(0.12)
                                     screen.blit(self.downBet,(950, 660))
                                     pygame.display.update()
-                                
+
                     if pygame.mouse.get_pos()[0] >=1015 and pygame.mouse.get_pos()[1] >= 635:
                         if pygame.mouse.get_pos()[0] <= 1095 and pygame.mouse.get_pos()[1] <= 670:
                             if self.bet > 0:
