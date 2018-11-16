@@ -131,6 +131,8 @@ class Game():
         self.flopX = 850
         self.cardScale = (71, 108)
         self.betButtonScale = (50,50)
+        self.bigBlind = 100
+        self.smallBlind = 50
 
         ## Gets cards for each player
 
@@ -319,6 +321,9 @@ class Game():
 
                             else:
                                 pass
+
+    def blinds(self):
+        pass
 
 class Help():
     def __init__(self):
