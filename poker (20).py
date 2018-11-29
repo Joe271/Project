@@ -44,6 +44,7 @@ class Player():
         self.Cards = ["", ""]
         self.Chips = 5000
         self.bet = 0
+        self.score = 0
 
 class User(Player):
     def __init__(self):
@@ -53,7 +54,7 @@ class User(Player):
         counter = 51
         for i in range (2):
             pick = random.randint(0, counter)
-            user.Cards[i] = dealer.dealerCards[pick][0]
+            user.Cards[i] = dealer.dealerCards[pick]
             dealer.dealerCards.pop(pick)
             counter = counter - 1
 
@@ -142,6 +143,8 @@ class Game():
         self.bigBlind = 100
         self.smallBlind = 50
         self.pot = 0
+        self.round = -1
+        self.hands = 0
 
     def getCards(self):
         ## Gets cards for each player
@@ -196,12 +199,14 @@ class Game():
         screen.blit(help.backPage, (30, 620))
         screen.blit(assets.backButtonText, (65, 625))
 
+        self.blinds()
+
         pygame.display.update()
 
         #time.sleep(1)
 
         for z in range (2): #Displays all 4 player cards
-            self.Card = pygame.image.load(user.Cards[z])
+            self.Card = pygame.image.load(user.Cards[z][0])
             self.Card = pygame.transform.scale(self.Card, self.cardScale)
             screen.blit(self.Card, (self.playerCardsX, 600))
             screen.blit(cards.backOfCard, (self.playerCardsX, 10))
@@ -239,12 +244,22 @@ class Game():
                                 screen.blit(self.potText, (600, 200))
                                 screen.blit(self.gamePress, (723, 660))
                                 screen.blit(assets.callButtonText, (726, 670))
+                                self.betBox = pygame.draw.rect(screen, Colours.lightGrey, (595, 485, 165, 40))
+                                screen.blit(assets.betText, (600, 490))
                                 pygame.display.update()
                                 time.sleep(0.2)
                                 screen.blit(self.menuButton, (723, 660))
                                 screen.blit(assets.callButtonText, (726, 670))
                                 pygame.display.update()
-                                self.displayFlop()
+                                self.round = self.round + 1
+                                if self.round == 0:
+                                    self.displayFlop()
+                                elif self.round == 1:
+                                    self.displayTurn()
+                                elif self.round == 2:
+                                    self.displayRiver()
+                                elif self.round == 3:
+                                    self.checkWin()
 
                         if pygame.mouse.get_pos()[0] >=833 and pygame.mouse.get_pos()[1] >= 600:
                             if pygame.mouse.get_pos()[0] <= 933 and pygame.mouse.get_pos()[1] <= 650:
@@ -258,8 +273,8 @@ class Game():
                                 pygame.display.update()
                                 if user.Chips == 0:
                                     user.Chips = -1
+                                self.round = 0
                                 self.returnCards()
-                                self.blinds()
                                 self.playGame()
 
                         if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
@@ -350,7 +365,6 @@ class Game():
                     if pygame.mouse.get_pos()[0] >=1015 and pygame.mouse.get_pos()[1] >= 635:
                         if pygame.mouse.get_pos()[0] <= 1095 and pygame.mouse.get_pos()[1] <= 670:
                             if self.bet >= 0:
-                                print(self.bet)
                                 user.bet = user.bet + self.bet
                                 self.bet = 0
                                 self.potBox = pygame.draw.rect(screen, Colours.lightGrey, (595, 485, 165, 40))
@@ -395,6 +409,30 @@ class Game():
     def returnCards(self):
         cards.getCardList()
         dealer.getDealerCards()
+
+    def checkWin(self):
+        pass
+
+    def isRoyalFlush(self):
+
+    def isFourOak(self):
+
+    def isFullHous(self):
+
+    def isFlush(self):
+
+    def isStraight(self):
+
+    def isThreeOak(self):
+
+    def isTwoPair(self):
+        if user.Cards[0][2] == user.Cards[1][2] and river.riverCards:
+            self.isTwoPair = 1
+
+    def isPair(self):
+        if user.Cards[0][2] == user.Cards[1][2]:
+            self.isPair = 1
+
 
 class Help():
     def __init__(self):
