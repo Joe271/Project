@@ -167,6 +167,7 @@ class Game():
         self.valueList = []
         self.totalValue = 0
         self.handValue = 0
+        self.noOfPair = 0
 
     def getCards(self):
         ## Gets cards for each player
@@ -179,6 +180,7 @@ class Game():
 
         self.restart()
         self.getCards()
+        self.getHandValue()
 
         ## Displays all starting assets
         self.back = pygame.transform.scale(assets.back, (1280, 720))
@@ -462,31 +464,64 @@ class Game():
             self.valueList.append(self.userHand[x][2])
             self.totalValue = self.totalValue + self.valueList[x]
 
+        self.valueList.sort()
+
+        while False:
+            self.isRoyalFlush()
+            self.isFourOak()
+            self.isFlush()
+            self.isStraight()
+            self.isThreeOak()
+            self.isPairs()
+
+        print(self.handValue)
+
     def isRoyalFlush(self):
         if self.suitList.count("C") == 5 or self.suitList.count("D") == 5 or self.suitList.count("H") == 5 or self.suitList.count("S") == 5:
             if self.totalValue == 55:
-                self.handValue = 13
+                self.handValue = 9
+        return True
 
-        else:
-            self.handValue = 0
+    def isFourOak(self):
+        for x in range (1, 14):
+            if self.valueList.count(x) == 4:
+                self.handValue = 8
+        return True
 
-    #def isFourOak(self):
+    def isFullHouse(self):
+        return True
 
-    #def isFullHous(self):
+    def isFlush(self):
+        if self.suitList.count("C") == 5 or self.suitList.count("D") == 5 or self.suitList.count("H") == 5 or self.suitList.count("S") == 5:
+            self.handValue = 6
+        return True
 
-    #def isFlush(self):
+    def isStraight(self):
+        return True
 
-    #def isStraight(self):
+    def isThreeOak(self):
+        for x in range (1, 14):
+            if self.valueList.count(x) == 3:
+                self.handValue = 4
+        return True
 
-    #def isThreeOak(self):
+    def isPairsself():
+        for x in range(1, 8):
+            if self.valueList.count(x) == 2:
+                self.noOfPair = self.noOfPair + 1
 
-    def isTwoPair(self):
-        if user.Cards[0][2] == user.Cards[1][2] and river.riverCards:
-            self.isTwoPair = 1
+            if self.noOfPair == 1:
+                self.handValue = 3
+                return True
 
-    def isPair(self):
-        if user.Cards[0][2] == user.Cards[1][2]:
-            self.isPair = 1
+            elif self.noOfPair == 2:
+                self.handValue = 2
+                return True
+
+            else:
+                self.handValue = 1
+                return True
+
 
 class Help():
     def __init__(self):
