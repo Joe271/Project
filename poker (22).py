@@ -150,7 +150,6 @@ class Game():
     def __init__(self):
 
         ## Variables
-
         self.playerTurn = True
         self.userDealerButton = True
         self.bet = 0
@@ -166,21 +165,18 @@ class Game():
         self.suitList = []
         self.valueList = []
         self.totalValue = 0
-        self.handValue = 0
         self.noOfPair = 0
 
     def getCards(self):
-        ## Gets cards for each player
 
+        ## Gets cards for each player
         user.getUserCards()
         computer.getComputerCards()
         river.getRiverCards()
 
     def playGame(self):
-
         self.restart()
         self.getCards()
-        self.getHandValue()
 
         ## Displays all starting assets
         self.back = pygame.transform.scale(assets.back, (1280, 720))
@@ -448,14 +444,17 @@ class Game():
         dealer.getDealerCards()
 
     def checkWin(self):
-        if user.handValue < computer.handValue:
-            self.computerWin = True
-        elif user.handValue > computer.handValue:
-            self.userWin = True
-        elif user.handValue == computer.handValue:
-            self.draw = True
+        while user.handValue == 0:
+            print(1)
+            self.isRoyalFlush()
+            self.isFourOak()
+            self.isFlush()
+            self.isStraight()
+            self.isThreeOak()
+            self.isPairs()
 
     def getHandValue(self):
+        print("saio")
         self.userHand = user.Cards
         self.riverCards = river.riverCards
         self.userHand.extend(river.riverCards)
@@ -466,61 +465,53 @@ class Game():
 
         self.valueList.sort()
 
-        while False:
-            self.isRoyalFlush()
-            self.isFourOak()
-            self.isFlush()
-            self.isStraight()
-            self.isThreeOak()
-            self.isPairs()
-
-        print(self.handValue)
+        self.checkWin()
 
     def isRoyalFlush(self):
         if self.suitList.count("C") == 5 or self.suitList.count("D") == 5 or self.suitList.count("H") == 5 or self.suitList.count("S") == 5:
             if self.totalValue == 55:
-                self.handValue = 9
-        return True
+                user.handValue = 9
+        return user.handValue
 
     def isFourOak(self):
         for x in range (1, 14):
             if self.valueList.count(x) == 4:
-                self.handValue = 8
-        return True
+                user.handValue = 8
+        return user.handValue
 
     def isFullHouse(self):
-        return True
+        return user.handValue
 
     def isFlush(self):
         if self.suitList.count("C") == 5 or self.suitList.count("D") == 5 or self.suitList.count("H") == 5 or self.suitList.count("S") == 5:
-            self.handValue = 6
-        return True
+            user.handValue = 6
+        return user.handValue
 
     def isStraight(self):
-        return True
+        return user.handValue
 
     def isThreeOak(self):
         for x in range (1, 14):
             if self.valueList.count(x) == 3:
-                self.handValue = 4
-        return True
+                user.handValue = 4
+        return user.handValue
 
-    def isPairsself():
+    def isPairs(self):
         for x in range(1, 8):
             if self.valueList.count(x) == 2:
                 self.noOfPair = self.noOfPair + 1
 
             if self.noOfPair == 1:
-                self.handValue = 3
-                return True
+                user.handValue = 3
+                return user.handValue
 
             elif self.noOfPair == 2:
-                self.handValue = 2
-                return True
+                user.handValue = 2
+                return user.handValue
 
             else:
-                self.handValue = 1
-                return True
+                user.handValue = 1
+                return user.handValue
 
 
 class Help():
