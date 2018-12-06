@@ -453,23 +453,33 @@ class Game():
         self.isFourOak()
         self.isRoyalFlush()
 
+        print(user.handValue)
+
     def getHandValue(self):
         self.userHand = user.Cards
         self.riverCards = river.riverCards
         self.userHand.extend(river.riverCards)
+        self.userHand = [["D10.JPG", "H", 2], ["H5.JPG", "H", 4], ["D10.JPG", "D", 2], ["D10.JPG", "S", 1], ["D10.JPG", "H", 3], ["S8.JPG", "S", 11], ["D10.JPG", "H", 4]]
+
         for x in range(7):
             self.suitList.append(self.userHand[x][1])
             self.valueList.append(self.userHand[x][2])
-            self.totalValue = self.totalValue + self.valueList[x]
 
         self.valueList.sort()
+
+        self.bestHandValues = self.valueList[2:]
+
+        self.totBestHand = sum(self.bestHandValues)
 
         self.checkWin()
 
     def isRoyalFlush(self):
-        if self.suitList.count("C") == 5 or self.suitList.count("D") == 5 or self.suitList.count("H") == 5 or self.suitList.count("S") == 5:
-            if self.totalValue == 55:
-                user.handValue = 9
+        if self.suitList.count("C") == 5 and self.totBestHand == 55 or self.suitList.count("D") == 5 and self.totBestHand == 55 or self.suitList.count("H") == 5 and self.totBestHand == 55 or self.suitList.count("S") == 5 and self.totBestHand == 55:
+            user.handValue = 10
+        return user.handValue
+
+    def isStraightFlush(self):
+        user.handValue = 9
         return user.handValue
 
     def isFourOak(self):
@@ -499,7 +509,8 @@ class Game():
         return user.handValue
 
     def isPairs(self):
-        for x in range(1, 8):
+        print(self.valueList)
+        for x in range(len(self.valueList)):
             if self.valueList.count(x) == 2:
                 self.noOfPair = self.noOfPair + 1
 
@@ -513,6 +524,7 @@ class Game():
 
             else:
                 user.handValue = 1
+                self.bestCard = self.valueList[-1]
                 return user.handValue
 
 
