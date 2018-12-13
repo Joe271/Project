@@ -68,35 +68,32 @@ class User(Player):
         super().__init__()
 
     def getUserCards(self):
-        counter = 51
         for i in range (2):
-            pick = random.randint(0, counter)
+            pick = random.randint(0, game.cardCounter)
             user.Cards[i] = dealer.dealerCards[pick]
             dealer.dealerCards.pop(pick)
-            counter = counter - 1
+            game.cardCounter = game.cardCounter - 1
 
 class Computer(Player):
     def __init__(self):
         super().__init__()
 
     def getComputerCards(self):
-        counter = 49
         for i in range (2):
-            pick = random.randint(0, counter)
+            pick = random.randint(0, game.cardCounter)
             computer.Cards[i] = dealer.dealerCards[pick]
             dealer.dealerCards.pop(pick)
-            counter = counter - 1
+            game.cardCounter = game.cardCounter - 1
 
 class River():
     def __init__(self):
         self.riverCards = ["", "", "", "", ""]
 
     def getRiverCards(self):
-        counter = 47
         for q in range (5):
-            pick = random.randint(0, counter)
+            pick = random.randint(0, game.cardCounter)
             river.riverCards[q] = dealer.dealerCards[pick]
-            counter = counter - 1
+            game.cardCounter = game.cardCounter - 1
             dealer.dealerCards.pop(pick)
 
 class Assets(): # All assets but cards
@@ -162,7 +159,8 @@ class Game():
         self.restart()
         self.getCards()
 
-        self.getHandValue(user.Cards)
+        self.getHandValue(user.Cards, 0) # ghghghghghghghghghghghghghghghghghghghghghgh
+        self.playAI()
 
         ## Displays all starting assets
         self.back = pygame.transform.scale(assets.back, (1280, 720))
@@ -245,7 +243,6 @@ class Game():
                             if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 710 and self.bet == 0:
                                 self.round = self.round + 1
                                 if self.round == 3:
-                                    self.checkWin()
                                     self.restart()
                                 elif self.round <= 2:
                                     self.pot = self.pot + user.bet
@@ -427,6 +424,14 @@ class Game():
         ## Variables
         self.playerTurn = True
         self.userDealerButton = True
+        self.ThreeOak = False
+        self.Straight = False
+        self.Flush = False
+        self.pair = False
+        self.suitList = []
+        self.valueList = []
+        self.userHand = []
+        self.cardCounter = 51
         self.bet = 0
         self.playerCardsX = 567
         self.flopX = 850
@@ -437,38 +442,14 @@ class Game():
         self.pot = 0
         self.round = -1
         self.hands = 0
-        self.suitList = []
-        self.valueList = []
-        self.userHand = []
         self.totalValue = 0
         self.noOfPair = 0
-        self.ThreeOak = False
-        self.Straight = False
-        self.Flush = False
-        self.pair = False
+        self.playerValue = [0, 0]
 
         cards.getCardList()
         dealer.getDealerCards()
 
-    def checkWin(self):
-
-        self.isPair()
-        self.isTwoPair()
-        self.isThreeOak()
-        self.isStraight()
-        self.isFlush()
-        self.isFullHouse()
-        self.isFourOak()
-        self.isStraightFlush()
-        self.isRoyalFlush()
-
-        if user.handValue == 0:
-            self.highCard = self.valueList[-1]
-            user.handValue = 1
-
-        print(user.handValue)
-
-    def getHandValue(self, playerCards):
+    def getHandValue(self, playerCards, playerValPos):
         self.userHand.extend(playerCards)
         self.riverCards = river.riverCards
         self.userHand.extend(river.riverCards)
@@ -481,63 +462,98 @@ class Game():
         self.userHand.sort()
         self.bestHandValues = self.valueList[2:]
         self.totBestHand = sum(self.bestHandValues)
-        self.checkWin()
 
-    def isRoyalFlush(self):
+        self.isPair(playerValPos)
+        self.isTwoPair(playerValPos)
+        self.isThreeOak(playerValPos)
+        self.isStraight(playerValPos)
+        self.isFlush(playerValPos)
+        self.isFullHouse(playerValPos)
+        self.isFourOak(playerValPos)
+        self.isStraightFlush(playerValPos)
+        self.isRoyalFlush(playerValPos)
+
+        if len(self.playerValue) == playerValPos + 1:
+            self.highCard = self.valueList[-1]
+            self.playerValue[playerValPos] = 1
+
+        print(playerCards)
+        print(self.userHand)
+        print(self.playerValue)
+
+        self.ThreeOak = False
+        self.Straight = False
+        self.Flush = False
+        self.pair = False
+        self.suitList = []
+        self.valueList = []
+        self.userHand = []
+        self.totalValue = 0
+        self.noOfPair = 0
+
+    def isRoyalFlush(self, playerValPos):
         if self.suitList.count("C") == 5 and self.totBestHand == 55 or self.suitList.count("D") == 5 and self.totBestHand == 55 or self.suitList.count("H") == 5 and self.totBestHand == 55 or self.suitList.count("S") == 5 and self.totBestHand == 55:
-            user.handValue = 10
+            self.playerValue[playerValPos] = 10
+            return
 
-    def isStraightFlush(self):
+    def isStraightFlush(self, playerValPos):
         if self.Straight == True and self.Flush == True:
-            user.handValue = 9
+            self.playerValue[playerValPos] = 9
+            return
 
-    def isFourOak(self):
+    def isFourOak(self, playerValPos):
         for x in range (1, 14):
             if self.valueList.count(x) == 4:
-                user.handValue = 8
+                self.playerValue[playerValPos] = 8
+                return
 
-    def isFullHouse(self):
+    def isFullHouse(self, playerValPos):
         if self.ThreeOak == True and self.pair == True:
-            user.handValue = 7
+            self.playerValue[playerValPos] = 7
+            return
 
-    def isFlush(self):
+    def isFlush(self, playerValPos):
         if self.suitList.count("C") >= 5 or self.suitList.count("D") >= 5 or self.suitList.count("H") >= 5 or self.suitList.count("S") >= 5:
-            user.handValue = 6
+            self.playerValue[playerValPos] = 6
             self.Flush = True
+            return
 
-    def isStraight(self):
+    def isStraight(self, playerValPos):
         #print(self.valueList)
         for i in range (len(self.valueList)):
             if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1 and self.valueList[i-2] - self.valueList[i-3] == 1 and self.valueList[i-3] - self.valueList[i-4] == 1:
-                user.handValue = 5
+                self.playerValue[playerValPos] = 5
                 self.Straight = True
-
-
                 return
 
-    def isThreeOak(self):
+    def isThreeOak(self, playerValPos):
         for x in range (1, 14):
             if self.valueList.count(x) == 3:
-                user.handValue = 4
+                self.playerValue[playerValPos] = 4
                 for y in range(3):
                     self.valueList.remove(x)
                 self.ThreeOak = True
+                return
 
-    def isTwoPair(self):
+    def isTwoPair(self, playerValPos):
         if self.pair == True:
             for x in range(1, 14):
                 if self.valueList.count(x) == 2:
-                    user.handValue = 3
+                    self.playerValue[playerValPos] = 3
                     self.valueList.remove(x)
                     return
 
-    def isPair(self):
+    def isPair(self, playerValPos):
         for x in range(1, 14):
             if self.valueList.count(x) == 2:
-                user.handValue = 2
+                self.playerValue[playerValPos] = 2
                 self.valueList.remove(x)
                 self.pair = True
                 return
+
+    def playAI (self):
+        self.getHandValue(computer.Cards, 1)
+
 
 class Help():
     def __init__(self):
