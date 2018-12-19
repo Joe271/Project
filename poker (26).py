@@ -165,7 +165,7 @@ class Game():
         self.getCards()
 
         self.getHandValue(user.Cards, 0)
-        self.playAI()
+        ai.getOpeningBet()
 
         print("User cards", user.Cards)
         print("C1 cards  ", computer.Cards)
@@ -228,8 +228,6 @@ class Game():
         screen.blit(assets.compchipstext, (334, 119))
         screen.blit(assets.compchipstext, (581, 119))
         screen.blit(assets.compchipstext, (824, 119))
-
-        print(assets.compchipstext.get_rect())
 
         pygame.display.update()
 
@@ -579,44 +577,83 @@ class Game():
                 self.pair = True
                 return
 
-    def playAI (self):
-        self.getHandValue(computer.Cards, 1)
-        self.getHandValue(computer2.Cards, 2)
-        self.getHandValue(computer3.Cards, 3)
+class AI():
+    def __init__(self):
+        self.openingBet = 0
+        self.maxBet = 0
 
-        if self.playerValue[1] < 2:
+    def getOpeningBet(self):
+        game.isPair(2)
+
+        if computer.Cards[0][0] <= 7 and computer.Cards[1][0] <=7:
+            self.openingBet = 200
+
+        elif computer.Cards[0][0] >= 7 and computer.Cards[1][0] >= 7:
+            self.openingBet = 300
+
+        elif computer.Cards[0][0] <=7 and computer.Cards[1][0] >=7 or computer.Cards[0][0] >= 7 and computer.Cards[1][0] <= 7:
+            self.openingBet = 250
+
+        elif game.pair == True and computer.Cards[0][0] >= 7:
+            self.openingBet = 1500
+
+        elif game.pair == True and computer.Cards[0][0] < 6:
+            self.openingBet = 750
+
+        elif computer.Cards[0][1] == computer.Cards[1][1]:
+            self.openingBet = 600
+
+        else:
+            self.openingBet = 200
+
+        print(self.openingBet)
+
+    def increaseBet(self):
+        pass
+
+    def fold(self):
+        pass
+
+    def callandcheck(self):
+        pass
+
+    def getMaxBets(self):
+        game.getHandValue(computer.Cards, 1)
+        #game.getHandValue(computer2.Cards, 2)
+        #game.getHandValue(computer3.Cards, 3)
+
+        if game.playerValue[1] < 2:
             self.maxBet1 = 150
-        elif self.playerValue[1] < 4:
+        elif game.playerValue[1] < 4:
             self.maxBet1 = 1000
-        elif self.playerValue[1] < 6:
+        elif game.playerValue[1] < 6:
             self.maxBet1 = 2000
-        elif self.playerValue[1] < 8:
+        elif game.playerValue[1] < 8:
             self.maxBet1 = 3000
-        elif self.playerValue[1] < 10:
+        elif game.playerValue[1] < 10:
             self.maxBet1 = 5000
 
-        if self.playerValue[1] < 2:
-            self.maxBet2 = 150
-        elif self.playerValue[1] < 4:
-            self.maxBet2 = 1000
-        elif self.playerValue[1] < 6:
-            self.maxBet2 = 2000
-        elif self.playerValue[1] < 8:
-            self.maxBet2 = 3000
-        elif self.playerValue[1] < 10:
-            self.maxBet2 = 5000
+        #if game.playerValue[2] < 2:
+        #    self.maxBet2 = 150
+        #elif game.playerValue[2] < 4:
+        #    self.maxBet2 = 1000
+        #elif game.playerValue[2] < 6:
+        #    self.maxBet2 = 2000
+        #elif game.playerValue[2] < 8:
+        #    self.maxBet2 = 3000
+        #elif game.playerValue[2] < 10:
+        #    self.maxBet2 = 5000
 
-        if self.playerValue[1] < 2:
-            self.maxBet3 = 150
-        elif self.playerValue[1] < 4:
-            self.maxBet3 = 1000
-        elif self.playerValue[1] < 6:
-            self.maxBet3 = 2000
-        elif self.playerValue[1] < 8:
-            self.maxBet3 = 3000
-        elif self.playerValue[1] < 10:
-            self.maxBet3 = 5000
-
+        #if game.playerValue[3] < 2:
+        #    self.maxBet3 = 150
+        #elif game.playerValue[3] < 4:
+        #    self.maxBet3 = 1000
+        #elif game.playerValue[3] < 6:
+        #    self.maxBet3 = 2000
+        #elif game.playerValue[3] < 8:
+        #    self.maxBet3 = 3000
+        #elif game.playerValue[3] < 10:
+        #    self.maxBet3 = 5000
 
 class Help():
     def __init__(self):
@@ -918,6 +955,7 @@ computer3 = Computer()
 river = River()
 assets = Assets()
 game = Game()
+ai = AI()
 help = Help()
 menu = Menu()
 
