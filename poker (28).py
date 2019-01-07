@@ -212,24 +212,7 @@ class Game():
         computer3.getComputerCards()
         river.getRiverCards()
 
-    def playGame(self):
-
-        #Gets starting variables and cards for all
-        self.restart()
-        self.getCards()
-
-        #Gets the value of the hand of each player, and determines how much AI starts their bet
-        self.getHandValue(user.Cards, 0)
-        computer.getOpeningBet()
-        computer2.getOpeningBet()
-        computer3.getOpeningBet()
-
-        print("User cards", user.Cards)
-        print("C1 cards  ", computer.Cards)
-        print("C2 cards  ", computer2.Cards)
-        print("C3 cards  ", computer3.Cards)
-        print("River     ", river.riverCards)
-        print("Player val", self.playerValue)
+    def startingAssets(self):
 
         ## Displays all starting assets
         #The back, table
@@ -266,12 +249,19 @@ class Game():
 
         self.computerBetBox = pygame.transform.scale(assets.menuButton, (165, 40))
         #self.potBox = pygame.draw.rect(screen, Colours.lightGrey, (557.5, 246, 165, 40)) # Pot background
-        screen.blit(self.computerBetBox, (557.5, 246))
+        screen.blit(self.computerBetBox, (557.5, 246)) # "Pot:" Box
         screen.blit(assets.potText, (562.5, 251))
 
-        screen.blit(self.computerBetBox, (557.5, 485))
+        screen.blit(self.computerBetBox, (557.5, 485)) # "Bet:" Box
         #self.betBox = pygame.draw.rect(screen, Colours.lightGrey, (557.5, 485, 165, 40)) # Bet background
         screen.blit(assets.betText, (562.5, 490)) # The amount of the bet
+
+        screen.blit(self.computerBetBox, (310.5, 178))
+        screen.blit(self.computerBetBox, (557, 178))
+        screen.blit(self.computerBetBox, (803.5, 178))
+        screen.blit(assets.betText, (315.5, 183))
+        screen.blit(assets.betText, (562, 183))
+        screen.blit(assets.betText, (808.5, 183))
 
         screen.blit(help.backPage, (30, 620))
         screen.blit(assets.backButtonText, (65, 625))
@@ -295,6 +285,26 @@ class Game():
 
         pygame.display.update()
 
+    def playGame(self):
+
+        #Gets starting variables and cards for all
+        self.restart()
+        self.getCards()
+        self.startingAssets()
+
+        #Gets the value of the hand of each player, and determines how much AI starts their bet
+        self.getHandValue(user.Cards, 0)
+        computer.getOpeningBet()
+        computer2.getOpeningBet()
+        computer3.getOpeningBet()
+
+        print("User cards", user.Cards)
+        print("C1 cards  ", computer.Cards)
+        print("C2 cards  ", computer2.Cards)
+        print("C3 cards  ", computer3.Cards)
+        print("River     ", river.riverCards)
+        print("Player val", self.playerValue)
+
         #time.sleep(1)
 
         for z in range (2): #Displays all 4 player cards
@@ -313,85 +323,88 @@ class Game():
         self.playerCardsX = 567
 
         while True:
-            if user.Chips >= 0:
-                self.gamePress = pygame.transform.scale(assets.menuButtonPress, (100 ,50))
-                for event in pygame.event.get():
-                    if event.type == QUIT:
-                        pygame.quit()
-                        sys.exit()
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        if pygame.mouse.get_pos()[0] >= 723 and pygame.mouse.get_pos()[1] >= 600:
-                            if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 650:
-                                screen.blit(self.gamePress, (723, 600))
-                                screen.blit(assets.betButtonText, (726, 610))
-                                pygame.display.update()
-                                time.sleep(0.2)
-                                screen.blit(self.menuButton, (723, 600))
-                                screen.blit(assets.betButtonText, (726, 610))
-                                pygame.display.update()
-                                self.makeBet()
+            self.playerGo()
 
-                        if pygame.mouse.get_pos()[0] >=723 and pygame.mouse.get_pos()[1] >= 660:
-                            if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 710 and self.bet == 0:
-                                self.round = self.round + 1
-                                if self.round == 3:
-                                    self.restart()
-                                elif self.round <= 2:
-                                    self.pot = self.pot + user.bet
-                                    user.bet = 0
-                                    screen.blit(self.computerBetBox, (557.5, 246))
-                                    #self.potBox = pygame.draw.rect(screen, Colours.lightGrey, (557.5, 246, 165, 40)) # Pot background
-                                    self.potText = assets.inGameFont.render("Pot: " + str(self.pot), True, Colours.black)
-                                    screen.blit(self.potText, (562.5, 251))
-                                    screen.blit(self.gamePress, (723, 660))
-                                    screen.blit(assets.callButtonText, (726, 670))
-                                    screen.blit(self.computerBetBox, (557.5, 485))
-                                    #self.betBox = pygame.draw.rect(screen, Colours.lightGrey, (557.5, 485, 165, 40))
-                                    screen.blit(assets.betText, (562.5, 490))
-                                    pygame.display.update()
-                                    time.sleep(0.2)
-                                    screen.blit(self.menuButton, (723, 660))
-                                    screen.blit(assets.callButtonText, (726, 670))
-                                    pygame.display.update()
-                                    if self.round <= 0:
-                                        self.displayFlop()
-                                    elif self.round == 1:
-                                        self.displayTurn()
-                                    elif self.round == 2:
-                                        self.displayRiver()
+    def playerGo(self):
+        if user.Chips >= 0:
+            self.gamePress = pygame.transform.scale(assets.menuButtonPress, (100 ,50))
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if pygame.mouse.get_pos()[0] >= 723 and pygame.mouse.get_pos()[1] >= 600:
+                        if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 650:
+                            screen.blit(self.gamePress, (723, 600))
+                            screen.blit(assets.betButtonText, (726, 610))
+                            pygame.display.update()
+                            time.sleep(0.2)
+                            screen.blit(self.menuButton, (723, 600))
+                            screen.blit(assets.betButtonText, (726, 610))
+                            pygame.display.update()
+                            self.makeBet()
 
-                        if pygame.mouse.get_pos()[0] >=833 and pygame.mouse.get_pos()[1] >= 600:
-                            if pygame.mouse.get_pos()[0] <= 933 and pygame.mouse.get_pos()[1] <= 650:
+                    if pygame.mouse.get_pos()[0] >=723 and pygame.mouse.get_pos()[1] >= 660:
+                        if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 710 and self.bet == 0:
+                            self.round = self.round + 1
+                            if self.round == 3:
+                                self.restart()
+                            elif self.round <= 2:
+                                self.pot = self.pot + user.bet
                                 user.bet = 0
-                                computer.Chips = computer.Chips + self.pot
-                                screen.blit(self.gamePress, (833, 600))
-                                screen.blit(assets.foldButtonText, (838, 610))
+                                screen.blit(self.computerBetBox, (557.5, 246))
+                                #self.potBox = pygame.draw.rect(screen, Colours.lightGrey, (557.5, 246, 165, 40)) # Pot background
+                                self.potText = assets.inGameFont.render("Pot: " + str(self.pot), True, Colours.black)
+                                screen.blit(self.potText, (562.5, 251))
+                                screen.blit(self.gamePress, (723, 660))
+                                screen.blit(assets.callButtonText, (726, 670))
                                 screen.blit(self.computerBetBox, (557.5, 485))
                                 #self.betBox = pygame.draw.rect(screen, Colours.lightGrey, (557.5, 485, 165, 40))
-                                self.computerChipsText = assets.inGameFont.render(str(computer.Chips), True, Colours.black)
                                 screen.blit(assets.betText, (562.5, 490))
                                 pygame.display.update()
                                 time.sleep(0.2)
-                                screen.blit(self.menuButton, (833, 600))
-                                screen.blit(assets.foldButtonText, (838, 610))
+                                screen.blit(self.menuButton, (723, 660))
+                                screen.blit(assets.callButtonText, (726, 670))
                                 pygame.display.update()
-                                computer.Chips = computer.Chips + self.pot
-                                if user.Chips == 0:
-                                    user.Chips = -1
-                                self.restart()
-                                self.playGame()
+                                if self.round <= 0:
+                                    self.displayFlop()
+                                elif self.round == 1:
+                                    self.displayTurn()
+                                elif self.round == 2:
+                                    self.displayRiver()
 
-                        if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
-                            if pygame.mouse.get_pos()[0] <= 205 and pygame.mouse.get_pos()[1] <= 695:
-                                screen.blit(help.backPagePress, (30, 620))
-                                screen.blit(assets.backButtonText, (65, 635))
-                                pygame.display.update()
-                                time.sleep(0.1)
-                                self.round = -1
-                                menu.displayMenu()
+                    if pygame.mouse.get_pos()[0] >=833 and pygame.mouse.get_pos()[1] >= 600:
+                        if pygame.mouse.get_pos()[0] <= 933 and pygame.mouse.get_pos()[1] <= 650:
+                            user.bet = 0
+                            computer.Chips = computer.Chips + self.pot
+                            screen.blit(self.gamePress, (833, 600))
+                            screen.blit(assets.foldButtonText, (838, 610))
+                            screen.blit(self.computerBetBox, (557.5, 485))
+                            #self.betBox = pygame.draw.rect(screen, Colours.lightGrey, (557.5, 485, 165, 40))
+                            self.computerChipsText = assets.inGameFont.render(str(computer.Chips), True, Colours.black)
+                            screen.blit(assets.betText, (562.5, 490))
+                            pygame.display.update()
+                            time.sleep(0.2)
+                            screen.blit(self.menuButton, (833, 600))
+                            screen.blit(assets.foldButtonText, (838, 610))
+                            pygame.display.update()
+                            computer.Chips = computer.Chips + self.pot
+                            if user.Chips == 0:
+                                user.Chips = -1
+                            self.restart()
+                            self.playGame()
 
-            elif user.Chips < 0:
-                self.lose()
+                    if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
+                        if pygame.mouse.get_pos()[0] <= 205 and pygame.mouse.get_pos()[1] <= 695:
+                            screen.blit(help.backPagePress, (30, 620))
+                            screen.blit(assets.backButtonText, (65, 635))
+                            pygame.display.update()
+                            time.sleep(0.1)
+                            self.round = -1
+                            menu.displayMenu()
+
+        elif user.Chips < 0:
+            self.lose()
 
     def lose(self):
         screen.blit(self.back, (0, 0))
@@ -642,84 +655,6 @@ class Game():
                 self.valueList.remove(x)
                 self.pair = True
                 return
-
-# class AI():
-#     def __init__(self):
-#         self.openingBet = 0
-#         self.maxBet = 0
-#
-#     def getOpeningBet(self):
-#         game.isPair(2)
-#
-#         if computer.Cards[0][0] <= 7 and computer.Cards[1][0] <=7:
-#             self.openingBet = 200
-#
-#         elif computer.Cards[0][0] >= 7 and computer.Cards[1][0] >= 7:
-#             self.openingBet = 300
-#
-#         elif computer.Cards[0][0] <=7 and computer.Cards[1][0] >=7 or computer.Cards[0][0] >= 7 and computer.Cards[1][0] <= 7:
-#             self.openingBet = 250
-#
-#         elif game.pair == True and computer.Cards[0][0] >= 7:
-#             self.openingBet = 1500
-#
-#         elif game.pair == True and computer.Cards[0][0] < 6:
-#             self.openingBet = 750
-#
-#         elif computer.Cards[0][1] == computer.Cards[1][1]:
-#             self.openingBet = 600
-#
-#         else:
-#             self.openingBet = 200
-#
-#         print("computer open",self.openingBet)
-#
-#     def increaseBet(self):
-#         pass
-#
-#     def fold(self):
-#         pass
-#
-#     def callandcheck(self):
-#         pass
-#
-#     def getMaxBets(self):
-#         game.getHandValue(computer.Cards, 1)
-#         game.getHandValue(computer2.Cards, 2)
-#         game.getHandValue(computer3.Cards, 3)
-#
-#         if game.playerValue[1] < 2:
-#             self.maxBet1 = 150
-#         elif game.playerValue[1] < 4:
-#             self.maxBet1 = 1000
-#         elif game.playerValue[1] < 6:
-#             self.maxBet1 = 2000
-#         elif game.playerValue[1] < 8:
-#             self.maxBet1 = 3000
-#         elif game.playerValue[1] < 10:
-#             self.maxBet1 = 5000
-#
-#         if game.playerValue[2] < 2:
-#            self.maxBet2 = 150
-#         elif game.playerValue[2] < 4:
-#            self.maxBet2 = 1000
-#         elif game.playerValue[2] < 6:
-#            self.maxBet2 = 2000
-#         elif game.playerValue[2] < 8:
-#            self.maxBet2 = 3000
-#         elif game.playerValue[2] < 10:
-#            self.maxBet2 = 5000
-#
-#         if game.playerValue[3] < 2:
-#            self.maxBet3 = 150
-#         elif game.playerValue[3] < 4:
-#            self.maxBet3 = 1000
-#         elif game.playerValue[3] < 6:
-#            self.maxBet3 = 2000
-#         elif game.playerValue[3] < 8:
-#            self.maxBet3 = 3000
-#         elif game.playerValue[3] < 10:
-#            self.maxBet3 = 5000
 
 class Help():
     def __init__(self):
