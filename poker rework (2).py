@@ -10,11 +10,11 @@ pygame.init()
 pygame.font.init()
 
 class Colours():
-    white = pygame.Color(255, 255, 255)
-    black = pygame.Color(0, 0, 0)
-    blue = pygame.Color(0, 75, 255)
-    grey = pygame.Color(83, 83, 83)
-    lightGrey = pygame.Color(200, 200, 200)
+    _white = pygame.Color(255, 255, 255)
+    _black = pygame.Color(0, 0, 0)
+    _blue = pygame.Color(0, 75, 255)
+    _grey = pygame.Color(83, 83, 83)
+    _lightGrey = pygame.Color(200, 200, 200)
 
 class Cards():
     def __init__(self):
@@ -133,30 +133,32 @@ class Assets(): # All assets but cards
 
         ## Creates all text
 
-        self.titleText = self.titleFont.render("Poker", True, (Colours.lightGrey)) # 285 x 101
-        self.playText = self.menuFont.render("Play", True, (Colours.black)) # 106 x 51
-        self.saveText = self.menuFont.render("Save", True, (Colours.black)) # 121 x 51
-        self.loadText = self.menuFont.render("Load", True, (Colours.black)) # 121 x 51
-        self.helpText = self.menuFont.render("Help", True, (Colours.black)) # 115 x 51
-        self.exitText = self.menuFont.render("Exit", True, (Colours.black)) # 99 x 51
-        self.betButtonText = self.inGameFont.render("Bet", True, Colours.black)
-        self.callButtonText = self.inGameFont.render("Call", True, Colours.black)
-        self.foldButtonText = self.inGameFont.render("Fold", True, Colours.black)
-        self.chipsText = self.inGameFont.render("Chips:", True, Colours.black)
-        self.betText = self.inGameFont.render("Bet: ", True, (Colours.black))
-        self.nextButtonText = self.menuFont.render("Next", True, (Colours.black))
-        self.backButtonText = self.menuFont.render("Back", True, (Colours.black))
-        self.compChipsText = self.compChipsFont.render("Chips:", True, Colours.black)
+        self.titleText = self.titleFont.render("Poker", True, (Colours._lightGrey)) # 285 x 101
+        self.playText = self.menuFont.render("Play", True, (Colours._black)) # 106 x 51
+        self.saveText = self.menuFont.render("Save", True, (Colours._black)) # 121 x 51
+        self.loadText = self.menuFont.render("Load", True, (Colours._black)) # 121 x 51
+        self.helpText = self.menuFont.render("Help", True, (Colours._black)) # 115 x 51
+        self.exitText = self.menuFont.render("Exit", True, (Colours._black)) # 99 x 51
+        self.betButtonText = self.inGameFont.render("Bet", True, Colours._black)
+        self.callButtonText = self.inGameFont.render("Call", True, Colours._black)
+        self.foldButtonText = self.inGameFont.render("Fold", True, Colours._black)
+        self.chipsText = self.inGameFont.render("Chips:", True, Colours._black)
+        self.nextButtonText = self.menuFont.render("Next", True, (Colours._black))
+        self.backButtonText = self.menuFont.render("Back", True, (Colours._black))
+        #self.compChipsText = self.compChipsFont.render("Chips:", True, Colours._black)
 
     def generateNumber(self):## Creates all text that is a number
 
-        self.userIncreaseText = self.inGameFont.render(str(user.increaseBet), True, Colours.black)
-        self.userBetText = self.inGameFont.render(str(user.bet), True, Colours.black)
-        self.userChipsText = self.inGameFont.render(str(user.Chips), True, Colours.black)
-        self.computer1ChipsText = self.inGameFont.render(str(computer1.Chips), True, Colours.black)
-        self.computer2ChipsText = self.inGameFont.render(str(computer2.Chips), True, Colours.black)
-        self.computer3ChipsText = self.inGameFont.render(str(computer3.Chips), True, Colours.black)
-        self.potText = self.inGameFont.render(("Pot: "+ str(dealer.pot)), True, (Colours.black))
+        self.userIncreaseText = self.inGameFont.render(str(user.increaseBet), True, Colours._black)
+        self.userBetText = self.inGameFont.render(("Bet: "+ str(user.bet)), True, Colours._black)
+        self.userChipsText = self.inGameFont.render(str(user.Chips), True, Colours._black)
+        self.computer1ChipsText = self.compChipsFont.render(("Chips: " + str(computer1.Chips)), True, Colours._black)
+        self.computer2ChipsText = self.compChipsFont.render(("Chips: " + str(computer2.Chips)), True, Colours._black)
+        self.computer3ChipsText = self.compChipsFont.render(("Chips: " + str(computer3.Chips)), True, Colours._black)
+        self.computer1BetText = self.inGameFont.render(("Bet: " + str(computer1.bet)), True, Colours._black)
+        self.computer2BetText = self.inGameFont.render(("Bet: " + str(computer2.bet)), True, Colours._black)
+        self.computer3BetText = self.inGameFont.render(("Bet: " + str(computer3.bet)), True, Colours._black)
+        self.potText = self.inGameFont.render(("Pot: "+ str(dealer.pot)), True, (Colours._black))
 
 class Game():
     def __init__(self):
@@ -175,76 +177,34 @@ class Game():
     def startingAssets(self):
 
         ## Displays all starting assets
-        #The back, table
         self.back = pygame.transform.scale(assets.back, (1280, 720))
         self.table = pygame.transform.scale(assets.table, (980, 420))
         screen.blit(self.back, (0, 0))
         screen.blit(self.table, (150, 150))
-
-        #The 3 user buttons
         self.menuButton = pygame.transform.scale(assets.menuButton, (100, 50))
         screen.blit(self.menuButton, (723, 600)) # Bet button image
         screen.blit(self.menuButton, (723, 660)) # Call button image
         screen.blit(self.menuButton, (833, 600)) # Fold button image
-        #pygame.draw.rect(screen, Colours.blue, (723, 600, 100, 50), 0) # Bet button rect
-        #pygame.draw.rect(screen, Colours.blue, (723, 660, 100, 50), 0) # Call button rect
-        #pygame.draw.rect(screen, Colours.blue, (833, 600, 100, 50), 0) # Fold button rect
         screen.blit(assets.betButtonText,(726, 610)) # Bet button text
         screen.blit(assets.callButtonText,(726, 670)) # Call button text
         screen.blit(assets.foldButtonText,(838, 610)) # Fold button text
-
-        #The 2 bet buttons
         self.upBet = pygame.transform.scale(assets.upBet, self.betButtonScale) # Grey increase bet button
         self.downBet = pygame.transform.scale(assets.downBet, self.betButtonScale) # Grey decrease bet button
         screen.blit(self.upBet, (950, 600))
         screen.blit(self.downBet, (950, 660))
-
         self.computerBetBox = pygame.transform.scale(assets.menuButton, (165, 40))
-
+        self.chipsBack = pygame.transform.scale(assets.menuButton, self.chipsScale)
         self.updateUserChips()
-        #
-        # #The chips
-        # pygame.draw.rect(screen, Colours.lightGrey, (445, 600, 105, 80), 0) # User chips background
-        # pygame.draw.rect(screen, Colours.lightGrey, (1015, 635, 80, 40), 0) # User bet increase background
-        #
-        # screen.blit(assets.userIncreaseText, (1020, 640)) # User bet text
-        # screen.blit(assets.chipsText, (450, 610)) # "Chips:" user
-        # screen.blit(assets.userChipsText, (450, 640)) # User chips text
-
+        self.updaterComputersChips()
         screen.blit(self.computerBetBox, (557.5, 246)) # "Pot:" Box
         screen.blit(assets.potText, (562.5, 251))
-
-        screen.blit(self.computerBetBox, (310.5, 178))
-        screen.blit(self.computerBetBox, (557, 178))
-        screen.blit(self.computerBetBox, (803.5, 178))
-        screen.blit(assets.betText, (315.5, 183))
-        screen.blit(assets.betText, (562, 183))
-        screen.blit(assets.betText, (808.5, 183))
 
         screen.blit(help.backPage, (30, 620))
         screen.blit(assets.backButtonText, (65, 625))
 
-        # 3 ai chips
-        self.chipsBack = pygame.transform.scale(assets.menuButton, self.chipsScale)
-        screen.blit(self.chipsBack, (self.comp1X, 123))
-        screen.blit(self.chipsBack, (self.playerCardsX, 123))
-        screen.blit(self.chipsBack, (self.comp3X, 123))
-        # pygame.draw.rect(screen, Colours.lightGrey, (self.comp1X, 123, 147, 22))
-        # pygame.draw.rect(screen, Colours.lightGrey, (self.playerCardsX, 123, 147, 22))
-        # pygame.draw.rect(screen, Colours.lightGrey, (self.comp3X, 123, 147, 22))
-        screen.blit(assets.compChipsText, (334, 119))
-        screen.blit(assets.compChipsText, (581, 119))
-        screen.blit(assets.compChipsText, (824, 119))
-
         pygame.display.update()
 
-    def playGame(self):
-
-        #Gets starting variables and cards for all
-        self.restart()
-        self.getCards()
-        self.startingAssets()
-
+    def displayCards(self):
         for z in range(2):  # Displays all 4 player cards
             self.Card = pygame.image.load(user.Cards[z][2])
             self.Card = pygame.transform.scale(self.Card, self.cardScale)
@@ -257,6 +217,17 @@ class Game():
             self.comp3X = self.comp3X + 75
             # time.sleep(0.75)
             pygame.display.update()
+
+        self.comp1X = 320
+        self.comp3X = 810
+
+    def playGame(self):
+
+        #Gets starting variables and cards for all
+        self.restart()
+        self.getCards()
+        self.startingAssets()
+        self.displayCards()
 
         self.playerCardsX = 567
 
@@ -279,51 +250,69 @@ class Game():
         #         computer3.nextTurn()
         #         self.playerTurn = 0
 
+    def updaterComputersChips(self):
+        assets.generateNumber()
+        screen.blit(self.computerBetBox, (310.5, 178))
+        screen.blit(self.computerBetBox, (557, 178))
+        screen.blit(self.computerBetBox, (803.5, 178))
+        screen.blit(self.chipsBack, (self.comp1X, 123))
+        screen.blit(self.chipsBack, (self.playerCardsX, 123))
+        screen.blit(self.chipsBack, (self.comp3X, 123))
+        screen.blit(assets.computer1ChipsText, (334, 119))
+        screen.blit(assets.computer2ChipsText, (581, 119))
+        screen.blit(assets.computer3ChipsText, (824, 119))
+        screen.blit(assets.computer1BetText, (315.5, 183))
+        screen.blit(assets.computer2BetText, (562, 183))
+        screen.blit(assets.computer3BetText, (808.5, 183))
+        pygame.display.update()
+
     def updateUserChips(self):
         assets.generateNumber()
-        pygame.draw.rect(screen, Colours.lightGrey, (445, 600, 105, 80), 0) # User total chips background (left)
-        pygame.draw.rect(screen, Colours.lightGrey, (1015, 635, 80, 40), 0) # User bet increase background (bottom right)
+        pygame.draw.rect(screen, Colours._lightGrey, (445, 600, 105, 80), 0) # User total chips background (left)
+        pygame.draw.rect(screen, Colours._lightGrey, (1015, 635, 80, 40), 0) # User bet increase background (bottom right)
         screen.blit(self.computerBetBox, (557.5, 485)) # The background for the bet box, lower central table
 
         screen.blit(assets.chipsText, (450, 610)) # "Chips:" user left
-        screen.blit(assets.betText, (562.5, 490)) # "Bet: " bottom middle table 58 x 37
+        screen.blit(assets.userBetText, (562.5, 490)) # "Bet: " bottom middle table 58 x 37
 
 
         screen.blit(assets.userIncreaseText, (1020, 640)) # User bet increase text bottom right
         screen.blit(assets.userChipsText, (450, 640)) # User chips value text left
-        screen.blit(assets.userBetText, (620.5, 490))
+        #screen.blit(assets.userBetText, (620.5, 490))
 
-        # self.userChipsText = assets.inGameFont.render(str(user.Chips), True, Colours.black)
-        # self.userBlindText = assets.inGameFont.render("Bet: " + str(user.bet), True, (Colours.black))
+        # self.userChipsText = assets.inGameFont.render(str(user.Chips), True, Colours._black)
+        # self.userBlindText = assets.inGameFont.render("Bet: " + str(user.bet), True, (Colours._black))
         # screen.blit(self.userChipsText, (450, 640))
         # screen.blit(self.userBlindText, (562.5, 490))
         pygame.display.update()
 
     def getBlinds(self):
-
         if self.dealerButtonLocation == 0:
             self.smallBlindFunction(computer1)
             self.bigBlindFunction(computer2)
+            self.updaterComputersChips()
 
         elif self.dealerButtonLocation == 1:
             self.smallBlindFunction(computer2)
             self.bigBlindFunction(computer3)
+            self.updaterComputersChips()
+            self.updateUserChips()
 
         elif self.dealerButtonLocation == 2:
             self.smallBlindFunction(computer3)
             self.bigBlindFunction(user)
+            self.updaterComputersChips()
+            self.updateUserChips()
 
         elif self.dealerButtonLocation == 3:
-            self.smallBlindPLayer = player.locationList[0]
-            self.dealerButtonLocation = self.dealerButtonLocation + 1
-            user.bet = user.bet + self.smallBlind
-            user.Chips = user.Chips - self.smallBlind
-            print(user.Chips)
+            self.smallBlindFunction(user)
+            self.bigBlindFunction(computer1)
+            self.updaterComputersChips()
             self.updateUserChips()
-            return user.bet
+
+        self.dealerButtonLocation = self.dealerButtonLocation + 1
 
     def smallBlindFunction(self, smallBlindPlayer):
-        self.dealerButtonLocation = self.dealerButtonLocation + 1
         smallBlindPlayer.bet = smallBlindPlayer.bet + self.smallBlind
         smallBlindPlayer.Chips = smallBlindPlayer.Chips - self.smallBlind
 
@@ -497,45 +486,45 @@ class Help():
     def __init__(self):
         self.back = pygame.transform.scale(assets.back, (1280, 720))
 
-        self.helpPage1 = assets.helpFont.render("How to play", True, Colours.white)  # 249 x 45
-        self.helpPage2 = assets.helpFont.render("How to win", True, Colours.white)  # 235 x 45
-        self.helpPage3 = assets.helpFont.render("Possible hands", True, Colours.white)  # 332 x 45
+        self.helpPage1 = assets.helpFont.render("How to play", True, Colours._white)  # 249 x 45
+        self.helpPage2 = assets.helpFont.render("How to win", True, Colours._white)  # 235 x 45
+        self.helpPage3 = assets.helpFont.render("Possible hands", True, Colours._white)  # 332 x 45
 
         self.help1 = assets.helpFont.render("To make a bet click the bet button, then use the arrows to", True,
-                                            Colours.white)
+                                            Colours._white)
         self.help2 = assets.helpFont.render("increase or decrease your bet, when you want to make the", True,
-                                            Colours.white)
+                                            Colours._white)
         self.help3 = assets.helpFont.render("bet click the box that your bet is in, if you do not wish", True,
-                                            Colours.white)
+                                            Colours._white)
         self.help4 = assets.helpFont.render("to make a bet and the opponent has not  made a bet click", True,
-                                            Colours.white)
+                                            Colours._white)
         self.help5 = assets.helpFont.render("the check/call button and the next cards in the river will", True,
-                                            Colours.white)
+                                            Colours._white)
         self.help6 = assets.helpFont.render("be displayed. At the start of each hand there are blinds", True,
-                                            Colours.white)
+                                            Colours._white)
         self.help7 = assets.helpFont.render("which is a forced bet that both players have to bet, this", True,
-                                            Colours.white)
+                                            Colours._white)
         self.help8 = assets.helpFont.render("is default to 100 chips however you can change this to be", True,
-                                            Colours.white)
-        self.help9 = assets.helpFont.render("higher or lower in multiples of 50.", True, Colours.white)
+                                            Colours._white)
+        self.help9 = assets.helpFont.render("higher or lower in multiples of 50.", True, Colours._white)
 
         self.help12 = assets.helpFont.render("To win get all of your opponents chips by betting your", True,
-                                             Colours.white)
+                                             Colours._white)
         self.help13 = assets.helpFont.render("own chips with theirs when you think you have a better", True,
-                                             Colours.white)
+                                             Colours._white)
         self.help14 = assets.helpFont.render("hand. E.g. if you only have one pair you may not want to", True,
-                                             Colours.white)
-        self.help15 = assets.helpFont.render("bet as much as if you had a flush or straight.", True, Colours.white)
+                                             Colours._white)
+        self.help15 = assets.helpFont.render("bet as much as if you had a flush or straight.", True, Colours._white)
 
-        self.help16 = assets.inGameFont.render("Pair:", True, Colours.white)
-        self.help17 = assets.inGameFont.render("Two Pair:", True, Colours.white)
-        self.help18 = assets.inGameFont.render("Three of a kind:", True, Colours.white)
-        self.help19 = assets.inGameFont.render("Straight:", True, Colours.white)
-        self.help20 = assets.inGameFont.render("Flush:", True, Colours.white)
-        self.help21 = assets.inGameFont.render("Full House:", True, Colours.white)
-        self.help22 = assets.inGameFont.render("Four of a kind:", True, Colours.white)
-        self.help23 = assets.inGameFont.render("Straight Flush:", True, Colours.white)
-        self.help24 = assets.inGameFont.render("Royal Flush:", True, Colours.white)
+        self.help16 = assets.inGameFont.render("Pair:", True, Colours._white)
+        self.help17 = assets.inGameFont.render("Two Pair:", True, Colours._white)
+        self.help18 = assets.inGameFont.render("Three of a kind:", True, Colours._white)
+        self.help19 = assets.inGameFont.render("Straight:", True, Colours._white)
+        self.help20 = assets.inGameFont.render("Flush:", True, Colours._white)
+        self.help21 = assets.inGameFont.render("Full House:", True, Colours._white)
+        self.help22 = assets.inGameFont.render("Four of a kind:", True, Colours._white)
+        self.help23 = assets.inGameFont.render("Straight Flush:", True, Colours._white)
+        self.help24 = assets.inGameFont.render("Royal Flush:", True, Colours._white)
 
         self.nextPage = pygame.transform.scale(assets.menuButton, (175, 75))
         self.backPage = self.nextPage
