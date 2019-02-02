@@ -1,4 +1,4 @@
-# Poker
+# Poker rework
 
 import random
 import pygame
