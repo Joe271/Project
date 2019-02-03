@@ -1,4 +1,4 @@
-# Poker rework
+# Poker
 
 import random
 import pygame
@@ -95,9 +95,9 @@ class River():
         self.riverCards = ["", "", "", "", ""]
 
     def getRiverCards(self):
-        for q in range (5):
+        for card in range (5):
             pick = random.randint(0, game.cardCounter)
-            river.riverCards[q] = dealer.dealerCards[pick]
+            river.riverCards[card] = dealer.dealerCards[pick]
             game.cardCounter = game.cardCounter - 1
             dealer.dealerCards.pop(pick)
 
