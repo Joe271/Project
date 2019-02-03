@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f8ec7b56-2b20-445b-b684-140c649b19a8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poker rework (3).py" beforeDir="false" afterPath="$PROJECT_DIR$/poker rework (3).py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/poker rework (3).py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1958">
-              <caret line="195" column="30" selection-start-line="195" selection-start-column="30" selection-end-line="195" selection-end-column="30" />
+            <state relative-caret-position="984">
+              <caret line="798" column="22" lean-forward="true" selection-start-line="798" selection-start-column="22" selection-end-line="798" selection-end-column="22" />
               <folding>
                 <element signature="e#144#334#0" />
                 <element signature="e#355#1584#0" />
@@ -62,6 +61,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -73,7 +73,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -125,7 +124,14 @@
       <option name="project" value="LOCAL" />
       <updated>1549125886685</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="rework">
+      <created>1549199806947</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1549199806947</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -138,10 +144,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1456" extended-state="6" />
+    <frame x="-7" y="0" width="1294" height="1447" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49962208" visible="true" weight="0.1461781" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49962208" visible="true" weight="0.29538217" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50037795" side_tool="true" weight="0.14609376" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -181,8 +187,8 @@
     <entry file="file://$PROJECT_DIR$/help.py" />
     <entry file="file://$PROJECT_DIR$/poker rework (3).py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1958">
-          <caret line="195" column="30" selection-start-line="195" selection-start-column="30" selection-end-line="195" selection-end-column="30" />
+        <state relative-caret-position="984">
+          <caret line="798" column="22" lean-forward="true" selection-start-line="798" selection-start-column="22" selection-end-line="798" selection-end-column="22" />
           <folding>
             <element signature="e#144#334#0" />
             <element signature="e#355#1584#0" />
