@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f8ec7b56-2b20-445b-b684-140c649b19a8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="f8ec7b56-2b20-445b-b684-140c649b19a8" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/poker rework (3).py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="984">
-              <caret line="798" column="22" lean-forward="true" selection-start-line="798" selection-start-column="22" selection-end-line="798" selection-end-column="22" />
+            <state relative-caret-position="443">
+              <caret line="453" column="15" lean-forward="true" selection-start-line="453" selection-start-column="15" selection-end-line="453" selection-end-column="15" />
               <folding>
                 <element signature="e#144#334#0" />
                 <element signature="e#355#1584#0" />
@@ -24,6 +22,34 @@
                 <element signature="e#1771#2005#0" />
                 <element signature="e#2031#2364#0" />
                 <element signature="e#2394#2840#0" />
+                <element signature="e#3243#6747#0" />
+                <element signature="e#6796#6810#0" />
+                <element signature="e#6845#7043#0" />
+                <element signature="e#7084#8632#0" />
+                <element signature="e#8670#9364#0" />
+                <element signature="e#9399#10177#0" />
+                <element signature="e#10224#10968#0" />
+                <element signature="e#11009#12121#0" />
+                <element signature="e#12156#13022#0" />
+                <element signature="e#13084#13219#0" />
+                <element signature="e#13277#13400#0" />
+                <element signature="e#13434#14345#0" />
+                <element signature="e#14375#14438#0" />
+                <element signature="e#14475#14873#0" />
+                <element signature="e#14910#15148#0" />
+                <element signature="e#15186#15428#0" />
+                <element signature="e#15493#16649#0" />
+                <element signature="e#16701#17008#0" />
+                <element signature="e#17063#17177#0" />
+                <element signature="e#17226#17368#0" />
+                <element signature="e#17419#17532#0" />
+                <element signature="e#17579#17807#0" />
+                <element signature="e#18269#18528#0" />
+                <element signature="e#18577#18809#0" />
+                <element signature="e#18855#19070#0" />
+                <element signature="e#19090#31322#0" />
+                <element signature="e#31342#34096#0" />
+                <element signature="e#34367#34618#0" />
               </folding>
             </state>
           </provider>
@@ -51,8 +77,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-7" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="403" />
+    <option name="y" value="-11" />
     <option name="width" value="1294" />
     <option name="height" value="1447" />
   </component>
@@ -61,7 +88,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -73,11 +99,12 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.file-colors" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Python" />
     <property name="settings.editor.splitter.proportion" value="0.2306163" />
   </component>
   <component name="RunDashboard">
@@ -172,15 +199,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1294" height="1447" extended-state="0" />
+    <frame x="-8" y="-8" width="2576" height="1456" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49962208" visible="true" weight="0.29538217" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49962208" visible="true" weight="0.1461781" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50037795" side_tool="true" weight="0.14609376" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.24384615" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -215,8 +242,8 @@
     <entry file="file://$PROJECT_DIR$/help.py" />
     <entry file="file://$PROJECT_DIR$/poker rework (3).py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="984">
-          <caret line="798" column="22" lean-forward="true" selection-start-line="798" selection-start-column="22" selection-end-line="798" selection-end-column="22" />
+        <state relative-caret-position="443">
+          <caret line="453" column="15" lean-forward="true" selection-start-line="453" selection-start-column="15" selection-end-line="453" selection-end-column="15" />
           <folding>
             <element signature="e#144#334#0" />
             <element signature="e#355#1584#0" />
@@ -224,6 +251,34 @@
             <element signature="e#1771#2005#0" />
             <element signature="e#2031#2364#0" />
             <element signature="e#2394#2840#0" />
+            <element signature="e#3243#6747#0" />
+            <element signature="e#6796#6810#0" />
+            <element signature="e#6845#7043#0" />
+            <element signature="e#7084#8632#0" />
+            <element signature="e#8670#9364#0" />
+            <element signature="e#9399#10177#0" />
+            <element signature="e#10224#10968#0" />
+            <element signature="e#11009#12121#0" />
+            <element signature="e#12156#13022#0" />
+            <element signature="e#13084#13219#0" />
+            <element signature="e#13277#13400#0" />
+            <element signature="e#13434#14345#0" />
+            <element signature="e#14375#14438#0" />
+            <element signature="e#14475#14873#0" />
+            <element signature="e#14910#15148#0" />
+            <element signature="e#15186#15428#0" />
+            <element signature="e#15493#16649#0" />
+            <element signature="e#16701#17008#0" />
+            <element signature="e#17063#17177#0" />
+            <element signature="e#17226#17368#0" />
+            <element signature="e#17419#17532#0" />
+            <element signature="e#17579#17807#0" />
+            <element signature="e#18269#18528#0" />
+            <element signature="e#18577#18809#0" />
+            <element signature="e#18855#19070#0" />
+            <element signature="e#19090#31322#0" />
+            <element signature="e#31342#34096#0" />
+            <element signature="e#34367#34618#0" />
           </folding>
         </state>
       </provider>
