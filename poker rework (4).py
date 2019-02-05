@@ -9,12 +9,14 @@ from pygame.locals import *
 pygame.init()
 pygame.font.init()
 
-class Colours():
+
+class Colours:
     _white = pygame.Color(255, 255, 255)
     _black = pygame.Color(0, 0, 0)
     _blue = pygame.Color(0, 75, 255)
     _grey = pygame.Color(83, 83, 83)
     _lightGrey = pygame.Color(200, 200, 200)
+
 
 class Cards():
     def __init__(self):
@@ -181,7 +183,7 @@ class Computer(Player):
         self.location = self.locationList[locPos]
 
     def getComputerCards(self):
-        for i in range (2):
+        for i in range(2):
             pick = random.randint(0, game.cardCounter)
             self.Cards[i] = dealer.dealerCards[pick]
             dealer.dealerCards.pop(pick)
@@ -330,7 +332,7 @@ class Game():
 
     def playGame(self):
 
-        #Gets starting variables and cards for all
+        # Gets starting variables and cards for all
         self.restart()
         self.getCards()
         self.startingAssets()

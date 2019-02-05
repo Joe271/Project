@@ -37,7 +37,7 @@ class Cards():
                 self.cardList.append([number, "D", "D"+str(number+1)+".JPG"])
         for number in range(13):
             if number == 0:
-                self.cardList.append([13, "H", "H"+str(number+1)+".JPG"])
+                self.cardList.append([13, "H", "H"+str(number+1)+". JPG"])
             else:
                 self.cardList.append([number, "H", "H"+str(number+1)+".JPG"])
         for number in range(13):
