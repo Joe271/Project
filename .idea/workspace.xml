@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="f8ec7b56-2b20-445b-b684-140c649b19a8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poker rework (3).py" beforeDir="false" afterPath="$PROJECT_DIR$/poker rework (3).py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/poker rework (4).py" beforeDir="false" afterPath="$PROJECT_DIR$/poker rework (4).py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poker rework (5).py" beforeDir="false" afterPath="$PROJECT_DIR$/poker rework (5).py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,15 +15,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/poker rework (4).py">
+        <entry file="file://$PROJECT_DIR$/poker rework (5).py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="636">
-              <caret line="176" column="23" lean-forward="true" selection-start-line="176" selection-start-column="23" selection-end-line="176" selection-end-column="23" />
-              <folding>
-                <element signature="e#9#22#0" expanded="true" />
-                <element signature="e#26115#38347#0" />
-                <element signature="e#38367#41121#0" />
-              </folding>
+            <state relative-caret-position="191">
+              <caret line="359" column="111" selection-start-line="359" selection-start-column="111" selection-end-line="359" selection-end-column="111" />
             </state>
           </provider>
         </entry>
@@ -48,12 +43,13 @@
         <option value="$PROJECT_DIR$/help.py" />
         <option value="$PROJECT_DIR$/poker rework (3).py" />
         <option value="$PROJECT_DIR$/poker rework (4).py" />
+        <option value="$PROJECT_DIR$/poker rework (5).py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1033" />
-    <option name="y" value="-12" />
+    <option name="x" value="308" />
+    <option name="y" value="-8" />
     <option name="width" value="1294" />
     <option name="height" value="1085" />
   </component>
@@ -62,6 +58,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -73,12 +70,11 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.2306163" />
   </component>
   <component name="RunDashboard">
@@ -93,7 +89,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.poker rework (4)">
+  <component name="RunManager" selected="Python.poker rework (5)">
     <configuration name="poker rework (3)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -136,8 +132,30 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="poker rework (5)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Project" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/poker rework (5).py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.poker rework (5)" />
         <item itemvalue="Python.poker rework (4)" />
         <item itemvalue="Python.poker rework (3)" />
       </list>
@@ -189,7 +207,14 @@
       <option name="project" value="LOCAL" />
       <updated>1549385235885</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="rework">
+      <created>1549390114331</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1549390114331</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -205,12 +230,12 @@
     <frame x="-8" y="-8" width="2576" height="1456" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49962208" visible="true" weight="0.16469662" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49962208" visible="true" weight="0.21985815" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50037795" side_tool="true" weight="0.14609376" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.24384615" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33723405" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -288,13 +313,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/poker rework (4).py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="636">
-          <caret line="176" column="23" lean-forward="true" selection-start-line="176" selection-start-column="23" selection-end-line="176" selection-end-column="23" />
+        <state relative-caret-position="680">
+          <caret line="319" column="43" lean-forward="true" selection-start-line="319" selection-start-column="43" selection-end-line="319" selection-end-column="43" />
           <folding>
             <element signature="e#9#22#0" expanded="true" />
-            <element signature="e#26115#38347#0" />
-            <element signature="e#38367#41121#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/poker rework (5).py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="359" column="111" selection-start-line="359" selection-start-column="111" selection-end-line="359" selection-end-column="111" />
         </state>
       </provider>
     </entry>

@@ -200,10 +200,10 @@ class Computer(Player):
         game.updateComputersChips()
 
     def check(self):
-
+        pass
 
     def computerBet(self):
-
+        pass
 
 
 class River():
@@ -357,7 +357,7 @@ class Game():
         self.getBlinds()
 
         for count in range(4):
-            while user.bet != computer1.bet or computer1.bet != computer2.bet or computer2.bet != computer3.bet and :
+            while user.bet != computer1.bet or computer1.bet != computer2.bet or computer2.bet != computer3.bet:
                 if self.playerTurn == 0:
                     user.userTurn()
                     self.playerTurn = self.playerTurn + 1
@@ -621,7 +621,7 @@ class Help():
         self.helpPage2 = assets.helpFont.render("How to win", True, Colours._white)  # 235 x 45
         self.helpPage3 = assets.helpFont.render("Possible hands", True, Colours._white)  # 332 x 45
 
-        self.help1 = assets.helpFont.render("To make a bet click the bet button, then use the arrows to", True,
+        self.help1 = assets.compChipsFont.render("The quick brown fox jumps over the lazy dog. 123456789", True,
                                             Colours._white)
         self.help2 = assets.helpFont.render("increase or decrease your bet, when you want to make the", True,
                                             Colours._white)
