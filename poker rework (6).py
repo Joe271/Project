@@ -104,6 +104,7 @@ class User(Player):
                             screen.blit(assets.userButton, (723, 660))
                             screen.blit(assets.callButtonText, (726, 670))
                             pygame.display.update()
+                            self.call()
                             # this button will allow the user to match the previous bet as this is the minimum they have to bet without folding
                     if pygame.mouse.get_pos()[0] >=833 and pygame.mouse.get_pos()[1] >= 600: # Fold button
                         if pygame.mouse.get_pos()[0] <= 933 and pygame.mouse.get_pos()[1] <= 650:
@@ -173,11 +174,15 @@ class User(Player):
                             game.previousBet = self.bet
                             # if the user clicks the number to increase this amount will be added to their bet and then the next player will have their turn
 
+    def call(self):
+        self.bet = game.previousBet
+        game.updateUserChips()
+
 class Computer(Player):
     def __init__(self, locPos):
         super().__init__()
         self.openingBet = 0 # how much preflop bet
-        self.maxBet = 0 # max bet after river
+        self.maxBet = 5000 # max bet after river
         self.currentBet = 0 # the amount they currently have in their bet
         self.location = self.locationList[locPos] # ?
 
@@ -189,12 +194,14 @@ class Computer(Player):
             game.cardCounter = game.cardCounter - 1
 
     def nextTurn(self): # the next turn for the computer is determined
-        if game.previousBet <= self.maxBet: # if the player before has bet less than the max bet
-            self.call() # the computer will match the amount of the previous bet
-        elif game.previousBet == 0: # if the player before has not increased the bet
-            self.check() # the computer will 'check' to see the next cards in the river
+        self.call()
+        # if game.previousBet <= self.maxBet: # if the player before has bet less than the max bet
+        #     self.call() # the computer will match the amount of the previous bet
+        # elif game.previousBet == 0: # if the player before has not increased the bet
+        #     self.check() # the computer will 'check' to see the next cards in the river
 
     def call(self):
+        print("big yeet")
         self.currentBet = game.previousBet # matches the bet of this player to the player before
         game.updateComputersChips() # updates the screen to get the new amounts of chips
 
@@ -203,7 +210,6 @@ class Computer(Player):
 
     def computerBet(self): # this will get the computer to increase their bet
         pass
-
 
 class River():
     def __init__(self):
@@ -360,19 +366,19 @@ class Game():
                     self.playerTurn = self.playerTurn + 1
 
                 elif self.playerTurn == 1:
-                    print(1)
+                    print("p1")
                     # computer1.nextTurn()
                     self.playerTurn = self.playerTurn + 1
 
                 elif self.playerTurn == 2:
                     # computer2.nextTurn()
                     self.playerTurn = self.playerTurn + 1
-                    print(2)
+                    print("p2")
 
                 elif self.playerTurn == 3:
                     # computer3.nextTurn()
                     self.playerTurn = 0
-                    print(3)
+                    print("p3")
 
             if count == 1:
                 self.displayFlop() # after the while loop finishes it will display the next card in the river the resets
@@ -442,6 +448,7 @@ class Game():
             self.playerTurn = 2
 
         self.dealerButtonLocation = self.dealerButtonLocation + 1 # moves the dealer button around 1
+        self.previousBet = 100
 
     def smallBlindFunction(self, smallBlindPlayer):
         smallBlindPlayer.bet = smallBlindPlayer.bet + self.smallBlind #
