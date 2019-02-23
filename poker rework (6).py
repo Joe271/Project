@@ -9,14 +9,12 @@ from pygame.locals import *
 pygame.init()
 pygame.font.init()
 
-
 class Colours:
     _white = pygame.Color(255, 255, 255)
     _black = pygame.Color(0, 0, 0)
     _blue = pygame.Color(0, 75, 255)
     _grey = pygame.Color(83, 83, 83)
     _lightGrey = pygame.Color(200, 200, 200)
-
 
 class Cards():
     def __init__(self):
@@ -605,6 +603,7 @@ class Game():
                 self.pair = True
                 return
         # counts the number of times each value appears and if it = 2 it is two of a kind
+
 class Help():
     def __init__(self):
         self.back = pygame.transform.scale(assets.back, (1280, 720))
