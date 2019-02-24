@@ -362,36 +362,48 @@ class Game():
         self.playerCardsX = 567 # used to reset the value of the x of the cards so it can be repeated in future rounds
         self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
 
-        for count in range(4):
-            while user.bet != computer1.bet or computer1.bet != computer2.bet or computer2.bet != computer3.bet: # while all of the bets are not equal run through each players turn
-                if self.playerTurn == 0: # calls each function for the players go
-                    user.userTurn()
-                    print("p0")
-                    self.playerTurn = self.playerTurn + 1
+        self.stage = 0 # 0 = pre 1 = flop 2 = turm 3 = river
 
-                elif self.playerTurn == 1:
-                    print("p1")
-                    computer1.nextTurn()
-                    self.playerTurn = self.playerTurn + 1
+        while True:
+            # user.userTurn()
+            # computer1.nextTurn()
+            # computer2.nextTurn()
+            # computer3.nextTurn()
+            print(1)
+            print(2)
+            break
+            print(3)
 
-                elif self.playerTurn == 2:
-                    computer2.nextTurn()
-                    self.playerTurn = self.playerTurn + 1
-                    print("p2")
-
-                elif self.playerTurn == 3:
-                    computer3.nextTurn()
-                    self.playerTurn = 0
-                    print("p3")
-
-            if count == 1:
-                self.displayFlop() # after the while loop finishes it will display the next card in the river the resets
-
-            elif count == 2:
-                self.displayTurn()
-
-            elif count == 3:
-                self.displayRiver()
+        # for count in range(4):
+        #     while user.bet != computer1.bet or computer1.bet != computer2.bet or computer2.bet != computer3.bet: # while all of the bets are not equal run through each players turn
+        #         if self.playerTurn == 0: # calls each function for the players go
+        #             user.userTurn()
+        #             print("p0")
+        #             self.playerTurn = self.playerTurn + 1
+        #
+        #         elif self.playerTurn == 1:
+        #             print("p1")
+        #             computer1.nextTurn()
+        #             self.playerTurn = self.playerTurn + 1
+        #
+        #         elif self.playerTurn == 2:
+        #             computer2.nextTurn()
+        #             self.playerTurn = self.playerTurn + 1
+        #             print("p2")
+        #
+        #         elif self.playerTurn == 3:
+        #             computer3.nextTurn()
+        #             self.playerTurn = 0
+        #             print("p3")
+        #
+        #     if count == 1:
+        #         self.displayFlop() # after the while loop finishes it will display the next card in the river the resets
+        #
+        #     elif count == 2:
+        #         self.displayTurn()
+        #
+        #     elif count == 3:
+        #         self.displayRiver()
 
     def updateComputersChips(self): # refreshes all of the computer related chip assets
         assets.generateNumber()
