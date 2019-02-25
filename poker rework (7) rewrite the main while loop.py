@@ -60,7 +60,7 @@ class Player():
         self.bet = 0 # all bets start at 0
         self.score = 0 # ?
         self.handValue = 0 # this is the rank of hand i.e. high card = 1 royal flush = 10
-        self.locationList = {0: "user", 1: "computer1", 2: "computer2", 3: "computer3"} # dictionary for all of the locations of each player in the hand starting from the user going clockwise
+        #self.locationList = {0: "user", 1: "computer1", 2: "computer2", 3: "computer3"} # dictionary for all of the locations of each player in the hand starting from the user going clockwise
 
 class User(Player):
     def __init__(self):
@@ -92,6 +92,7 @@ class User(Player):
                             screen.blit(assets.betButtonText, (726, 610)) # ^^
                             pygame.display.update()
                             self.makeBet() # calls the function that allows the user to increase their bet
+                            game.isEqual()
                             return
 
                     if pygame.mouse.get_pos()[0] >= 723 and pygame.mouse.get_pos()[1] >= 660:  # Call button
@@ -104,6 +105,7 @@ class User(Player):
                             screen.blit(assets.callButtonText, (726, 670))
                             pygame.display.update()
                             self.call()
+                            game.isEqual()
                             return
                             # this button will allow the user to match the previous bet as this is the minimum they have to bet without folding
 
@@ -120,6 +122,8 @@ class User(Player):
                             # this will allow the user to get out of the round if they think that they cannot win
 
     def makeBet(self): # the function allowing the user to increase their bet
+        self.increaseBet = self.increaseBet + game.previousBet
+        self.Chips = self.Chips - self.increaseBet
         self.betting = True
         while self.betting:
             for event in pygame.event.get():
@@ -163,6 +167,7 @@ class User(Player):
 
                     if pygame.mouse.get_pos()[0] >= 1015 and pygame.mouse.get_pos()[1] >= 635:  # Add increase to total bet
                         if pygame.mouse.get_pos()[0] <= 1095 and pygame.mouse.get_pos()[1] <= 670:
+                            # add thing for if it is less than previous bet say noooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
                             self.bet = self.bet + self.increaseBet
                             self.increaseBet = 0
                             screen.blit(assets.computerBetBox, (557.5, 485))
@@ -178,8 +183,19 @@ class User(Player):
                             # if the user clicks the number to increase this amount will be added to their bet and then the next player will have their turn
 
     def call(self):
-        self.bet = game.previousBet
-        game.updateUserChips()
+        if self.bet == game.previousBet:
+            self.check()
+            return
+        else:
+            if self.bet == 0:
+                self.Chips = self.Chips - game.previousBet
+            else:
+                self.Chips = self.Chips - (game.previousBet - self.bet)
+            self.bet = game.previousBet # matches the bet of this player to the player before
+            game.updateUserChips() # updates the screen to get the new amounts of chips
+
+    def check(self):
+        return
 
 class Computer(Player):
     def __init__(self, locPos):
@@ -187,7 +203,7 @@ class Computer(Player):
         self.openingBet = 0 # how much preflop bet
         self.maxBet = 5000 # max bet after river
         self.currentBet = 0 # the amount they currently have in their bet
-        self.location = self.locationList[locPos] # ?
+        #self.location = self.locationList[locPos] # ?
 
     def getComputerCards(self):
         for i in range(2): # picks their 2 cards (see user.getUserCards())
@@ -198,15 +214,22 @@ class Computer(Player):
 
     def nextTurn(self): # the next turn for the computer is determined
         self.call()
+        game.isEqual()
         # if game.previousBet <= self.maxBet: # if the player before has bet less than the max bet
         #     self.call() # the computer will match the amount of the previous bet
         # elif game.previousBet == 0: # if the player before has not increased the bet
         #     self.check() # the computer will 'check' to see the next cards in the river
 
     def call(self):
-        self.bet = game.previousBet # matches the bet of this player to the player before
-        print(self.bet)
-        game.updateComputersChips() # updates the screen to get the new amounts of chips
+        if self.bet == game.previousBet:
+            self.check()
+        else:
+            if self.bet == 0:
+                self.Chips = self.Chips - game.previousBet
+            else:
+                self.Chips = self.Chips - (game.previousBet - self.bet)
+            self.bet = game.previousBet # matches the bet of this player to the player before
+            game.updateComputersChips() # updates the screen to get the new amounts of chips
 
     def check(self): # will just pass to the next cards from the river
         pass
@@ -328,8 +351,7 @@ class Game():
 
         self.updateUserChips() # refreshes all of the assets relating to user chips
         self.updateComputersChips() # ^^ but for the computer
-        screen.blit(assets.computerBetBox, (557.5, 246)) # "Pot:" box in the centre of table
-        screen.blit(assets.potText, (562.5, 251)) # the text in the box ^^
+        self.updatePot() # ^^ but for the pot box in the top middle of table
 
         screen.blit(help.backPage, (30, 620)) # the back button bottom left
         screen.blit(assets.backButtonText, (65, 625)) # the text in ^^
@@ -353,6 +375,22 @@ class Game():
         self.comp1X = 320
         self.comp3X = 810
 
+    def isEqual(self):
+        if user.bet == computer1.bet and computer1.bet == computer2.bet and computer2.bet == computer3.bet:
+            self.betsEqual = True
+
+    def endStage(self):
+        dealer.pot = dealer.pot + user.bet + computer1.bet + computer2.bet + computer3.bet
+        user.bet = 0
+        computer1.bet = 0
+        computer2.bet = 0
+        computer3.bet = 0
+        self.betsEqual = False
+        self.previousBet = 0
+        self.updatePot()
+        self.updateUserChips()
+        self.updateComputersChips()
+
     def playGame(self):
 
         self.restart()
@@ -362,48 +400,60 @@ class Game():
         self.playerCardsX = 567 # used to reset the value of the x of the cards so it can be repeated in future rounds
         self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
 
-        self.stage = 0 # 0 = pre 1 = flop 2 = turm 3 = river
+        self.stage = 1 # 0 = pre 1 = flop 2 = turm 3 = river
+        self.betsEqual = False
+        for x in range (4):
+            while not self.betsEqual:
+                user.userTurn()
+                #time.sleep(1)
+                computer1.nextTurn()
+                #time.sleep(1)
+                computer2.nextTurn()
+                #time.sleep(1)
+                computer3.nextTurn()
+                #time.sleep(1)
 
-        while True:
-            # user.userTurn()
-            # computer1.nextTurn()
-            # computer2.nextTurn()
-            # computer3.nextTurn()
-            print(1)
-            print(2)
-            break
-            print(3)
+            self.endStage()
 
-        # for count in range(4):
-        #     while user.bet != computer1.bet or computer1.bet != computer2.bet or computer2.bet != computer3.bet: # while all of the bets are not equal run through each players turn
-        #         if self.playerTurn == 0: # calls each function for the players go
-        #             user.userTurn()
-        #             print("p0")
-        #             self.playerTurn = self.playerTurn + 1
-        #
-        #         elif self.playerTurn == 1:
-        #             print("p1")
-        #             computer1.nextTurn()
-        #             self.playerTurn = self.playerTurn + 1
-        #
-        #         elif self.playerTurn == 2:
-        #             computer2.nextTurn()
-        #             self.playerTurn = self.playerTurn + 1
-        #             print("p2")
-        #
-        #         elif self.playerTurn == 3:
-        #             computer3.nextTurn()
-        #             self.playerTurn = 0
-        #             print("p3")
-        #
-        #     if count == 1:
-        #         self.displayFlop() # after the while loop finishes it will display the next card in the river the resets
-        #
-        #     elif count == 2:
-        #         self.displayTurn()
-        #
-        #     elif count == 3:
-        #         self.displayRiver()
+            if self.stage == 1:
+                self.displayFlop()
+
+            if self.stage == 2:
+                self.displayTurn()
+
+            if self.stage == 3:
+                self.displayRiver()
+
+            if self.stage == 4:
+                self.getHandValue(user.Cards, 0)
+                self.getHandValue(computer1.Cards, 1)
+                self.getHandValue(computer2.Cards, 2)
+                self.getHandValue(computer3.Cards, 3)
+                # whoever has the highest hand gets all the bets
+                self.playerValue = [8, 1, 3, 4]
+                self.winnerLocation = [i for i, n in enumerate(self.playerValue) if n == max(self.playerValue)]
+
+                print(self.winnerLocation)
+
+                if len(self.winnerLocation) == 1:
+                    winner = locationList[self.winnerLocation[0]]
+                    winner.Chips = winner.Chips + dealer.pot
+                    dealer.pot = 0
+                    self.updatePot()
+                    self.updateUserChips()
+                    self.updateComputersChips()
+                    print(user.Chips, computer1.Chips, computer2.Chips, computer3.Chips)
+
+                else:
+                    print("BIG BENIN")
+
+            self.stage = self.stage + 1
+
+    def updatePot(self):
+        assets.generateNumber()
+        screen.blit(assets.computerBetBox, (557.5, 246))
+        screen.blit(assets.potText, (562.5, 251))
+        pygame.display.update()
 
     def updateComputersChips(self): # refreshes all of the computer related chip assets
         assets.generateNumber()
@@ -467,7 +517,7 @@ class Game():
         self.previousBet = 100
 
     def smallBlindFunction(self, smallBlindPlayer):
-        smallBlindPlayer.bet = smallBlindPlayer.bet + self.smallBlind #
+        smallBlindPlayer.bet = smallBlindPlayer.bet + self.smallBlind
         smallBlindPlayer.Chips = smallBlindPlayer.Chips - self.smallBlind
 
     def bigBlindFunction(self, bigBlindPlayer):
@@ -492,7 +542,6 @@ class Game():
         self.flopX = 850 # x location of the first card in the flop
         self.bigBlind = 100 # the number of chips bet after the small blind
         self.smallBlind = 50 # the number of chips bet after the small blind
-        self.pot = 0 # the starting value of the pot
         self.playerTurn = 0 # determines which players turn it is starts at 0
         self.playerValue = [0, 0, 0, 0] # list of the different hadn values for the players
         self.previousBet = 0 # the bet of the player before so that the the next player can call
@@ -944,4 +993,5 @@ if __name__ == "__main__":
     screenSize = ((screenwidth, screenheight))
     screen = pygame.display.set_mode(screenSize)
     pygame.display.set_caption("Poker")
+    locationList = {0: user, 1: computer1, 2: computer2, 3: computer3}
     menu.displayMenu()
