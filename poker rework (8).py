@@ -60,8 +60,6 @@ class Player():
         self.bet = 0 # all bets start at 0
         self.score = 0 # ?
         self.handValue = 0 # this is the rank of hand i.e. high card = 1 royal flush = 10
-        self.isFolded = False
-        #self.locationList = {0: "user", 1: "computer1", 2: "computer2", 3: "computer3"} # dictionary for all of the locations of each player in the hand starting from the user going clockwise
 
 class User(Player):
     def __init__(self, locPos):
@@ -69,7 +67,8 @@ class User(Player):
         self.increaseBet = 0 # this is how much the user is going to increase their bet by and is displayed in the bottom left
         self.locPos = locPos
 
-    def getUserCards(self):
+    def getCards(self):
+        self.isFolded = False
         for i in range (2): # runs twice for 2 cards
             pick = random.randint(0, game.cardCounter) # picks a random number to select the card
             user.Cards[i] = dealer.dealerCards[pick] # the selected card is put in index i in their Cards
@@ -140,8 +139,8 @@ class User(Player):
                             if user.Chips > 0: # checks that the user has chips to bet
                                 pygame.draw.rect(screen, Colours._lightGrey, (1015, 635, 80, 40), 0)  # Rect over the top of the increase to cover old text
                                 pygame.draw.rect(screen, Colours._lightGrey, (445, 640, 105, 40), 0)  # Rect over users chips to update the text
-                                self.increaseBet = self.increaseBet + 50 # increases the bet by 50 as this is the increment cause by the button press
-                                self.Chips = self.Chips - 50 # takes these chips out of the users bank as they would not gave them
+                                self.increaseBet = self.increaseBet + 4900 # increases the bet by 50 as this is the increment cause by the button press
+                                self.Chips = self.Chips - 4900 # takes these chips out of the users bank as they would not gave them
                                 self.userIncreaseText = assets.inGameFont.render(str(self.increaseBet), True, Colours._black)  # The text that goes over increase rect
                                 self.userChipsText = assets.inGameFont.render(str(user.Chips), True, Colours._black)  # Text over the new users number of chips
                                 screen.blit(self.userIncreaseText, (1020, 640))  # Displays the new increase over the top
@@ -222,9 +221,10 @@ class Computer(Player):
         self.openingBet = 0 # how much preflop bet
         self.maxBet = 5000 # max bet after river
         self.currentBet = 0 # the amount they currently have in their bet
-        #self.location = self.locationList[locPos] # ?
+        self.cardAsset = cards.backOfCard
 
-    def getComputerCards(self):
+    def getCards(self):
+        self.isFolded = False
         for i in range(2): # picks their 2 cards (see user.getUserCards())
             pick = random.randint(0, game.cardCounter)
             self.Cards[i] = dealer.dealerCards[pick]
@@ -353,11 +353,15 @@ class Game():
 
     def getCards(self): # calls all of the functions that gives the players cards
 
-        ## Gets cards for each player
-        user.getUserCards()
-        computer1.getComputerCards()
-        computer2.getComputerCards()
-        computer3.getComputerCards()
+        print(self.remainingList)
+        for x in range(len(self.remainingPlayers)):
+            self.remainingPlayers[self.remainingList[x]][1].getCards()
+
+        # ## Gets cards for each player
+        # user.getUserCards()
+        # computer1.getComputerCards()
+        # computer2.getComputerCards()
+        # computer3.getComputerCards()
         river.getRiverCards()
 
     def blankCards(self, playerToUpdate):
@@ -445,27 +449,22 @@ class Game():
         self.updateComputersChips()
 
     def playGame(self):
-        while user.Chips >= 0:
+        self.dealerButtonLocation = 1 #random.randint(0, 3) # the starting location of the dealer button
+        while user.Chips > 0:
 
             self.restart()
+            self.remainingList = list(self.remainingPlayers)
             self.getCards()
             self.startingAssets()
             self.displayCards()
             self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
 
-            self.remainingPlayers = locationList
-            self.stage = 1 # 0 = pre 1 = flop 2 = turn 3 = river
-            self.betsEqual = False
             for x in range (4):
                 while not self.betsEqual:
                     user.userTurn()
-                    #time.sleep(1)
                     computer1.nextTurn()
-                    #time.sleep(1)
                     computer2.nextTurn()
-                    #time.sleep(1)
                     computer3.nextTurn()
-                    #time.sleep(1)
 
                 self.endStage()
 
@@ -487,10 +486,11 @@ class Game():
                     # self.getHandValue(computer2.Cards, 2)
                     # self.getHandValue(computer3.Cards, 3)
                     # # whoever has the highest hand gets all the bets
+                    self.playerValue = [8, 4, 8, 5]
                     self.winnerLocation = [i for i, n in enumerate(self.playerValue) if n == max(self.playerValue)]
 
                     if len(self.winnerLocation) == 1:
-                        winner = locationList[self.winnerLocation[0]][1]
+                        winner = self.remainingPlayers[self.winnerLocation[0]][1]
                         winner.Chips = winner.Chips + dealer.pot
                         dealer.pot = 0
                         self.updatePot()
@@ -498,15 +498,18 @@ class Game():
                         self.updateComputersChips()
 
                     else:
-                        print("BIG BENIN")
+                        self.winningChips = dealer.pot // 25
+                        self.winningChips = self.winningChips // len(self.winnerLocation)
+                        self.winningChips = self.winningChips * 25
+                        for x in range(len(self.winnerLocation)):
+                            winner = self.remainingPlayers[self.winnerLocation[x]][1]
+                            winner.Chips = winner.Chips + self.winningChips
 
                 self.stage = self.stage + 1
 
         self.lose()
 
     def isEqual(self):
-        self.remainingList = list(self.remainingPlayers)
-        # print(self.remainingPlayers[self.remainingList[0]][1])
         for x in range(len(self.remainingPlayers)):
             if self.remainingPlayers[self.remainingList[x]][1].bet == self.previousBet:
                 self.betsEqual = True
@@ -590,10 +593,14 @@ class Game():
         bigBlindPlayer.bet = bigBlindPlayer.bet + self.bigBlind
         bigBlindPlayer.Chips = bigBlindPlayer.Chips - self.bigBlind
 
+    def constructRemainingPlayers(self):
+        for x in range(4):
+            if self.allPlayers[x][1].Chips > 0:
+                self.remainingPlayers.update({x : [x, self.allPlayers[x][1]]})
+
     def restart(self):
 
         ## Variables
-        self.dealerButtonLocation = 1 #random.randint(0, 3) # the starting location of the dealer button
         self.ThreeOak = False # is the hand three of a kind
         self.Straight = False # is it straight
         self.Flush = False # is it a flush
@@ -612,7 +619,12 @@ class Game():
         self.playerTurn = 0 # determines which players turn it is starts at 0
         self.playerValue = [0, 0, 0, 0] # list of the different hadn values for the players
         self.previousBet = 0 # the bet of the player before so that the the next player can call
+        self.allPlayers = {0: [0, user, self.playerCardsX], 1: [1, computer1, self.comp1X], 2: [2, computer2, self.playerCardsX], 3: [3, computer3, self.comp3X]}
+        self.remainingPlayers = {}
+        self.stage = 1 # 0 = pre 1 = flop 2 = turn 3 = river
+        self.betsEqual = False
 
+        self.constructRemainingPlayers()
         cards.getCardList() # gets all cards
         dealer.getDealerCards() # puts the list into a new temp list
 
@@ -751,7 +763,7 @@ class Help():
                                             Colours._white)
         self.help2 = assets.helpFont.render("increase or decrease your bet, when you want to make the", True,
                                             Colours._white)
-        self.help3 = assets.helpFont.render("bet click the box that your bet is in, if you do not wish", True,
+        self.help3 = assets.helpFont.render("bet, click the box that your bet is in, if you do not wish", True,
                                             Colours._white)
         self.help4 = assets.helpFont.render("to make a bet and the opponent has not  made a bet click", True,
                                             Colours._white)
@@ -1049,6 +1061,7 @@ computer1 = Computer(1)
 computer2 = Computer(2)
 computer3 = Computer(3)
 river = River()
+locationList = {0: [0, user], 1: [1, computer1], 2: [2, computer2], 3: [3, computer3]}
 game = Game()
 help = Help()
 menu = Menu()
@@ -1056,10 +1069,7 @@ menu = Menu()
 if __name__ == "__main__":
     screenwidth = 1280
     screenheight = 720
-    framerate = 60
-    clock = pygame.time.Clock()
     screenSize = ((screenwidth, screenheight))
     screen = pygame.display.set_mode(screenSize)
     pygame.display.set_caption("Poker")
-    locationList = {0: [0, user], 1: [1, computer1], 2: [2, computer2], 3: [3, computer3]}
     menu.displayMenu()
