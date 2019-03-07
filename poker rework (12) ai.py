@@ -240,7 +240,7 @@ class Computer(Player):
             self.bet = 1
         if self.currentBet == 0:
             self.currentBet = 1
-        if game.previousBet = 0:
+        if game.previousBet == 0:
             game.previousBet = 1
 
         self.betPercent = self.currentBet // self.maxBet # the percentage of the total amount they could bet compared to how much they have currently bet small / big
@@ -252,14 +252,16 @@ class Computer(Player):
 
         elif self.isFolded == False:
             if self.multipleFromMaxBet > 4:
-                print(420)
                 self.computerBet()
             elif self.multipleFromMaxBet <= 4:
-                print(69)
                 self.call()
             else:
                 self.fold()
             game.isEqual()
+
+        if self.bet != 0:
+            game.previousBet = self.bet
+        game.updateComputersChips()
 
     def getMaxBets(self):
         if game.playerValue[self.locPos] <= 1:
@@ -312,7 +314,6 @@ class Computer(Player):
 
     def computerBet(self): # this will get the computer to increase their bet
         self.betMultiple = (self.maxBet - self.bet) // 50
-        print(self.betMultiple)
         self.bet = self.bet + (self.minBet * self.betMultiple)
 
 class River():
@@ -699,7 +700,6 @@ class Game():
         # self.userHand.extend(playerCards) # adds the full 7 card each player has available to them to the temp variable so all cards can be analysed
         # self.riverCards = river.riverCards # changes the cards stored in the river from the river class into a local variable river so they are not overwritten
         # self.userHand.extend(self.riverCards) # adds the local river cards to the list with all the cards to allow analysis of all possible hands in play
-        print(playerCards)
         for x in range(len(playerCards)):
             self.suitList.append(playerCards[x][1]) # takes the suit from each card and puts it into a seperate list
             self.valueList.append(playerCards[x][0]) # takes the values of the cards anf puts it into the seperate lists
