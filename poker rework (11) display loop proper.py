@@ -74,7 +74,7 @@ class User(Player):
             game.cardCounter = game.cardCounter - 1 # reduces the counter by the number of cards chosen so there are no index errors
 
     def userTurn(self):
-        if self.isFolded == True:
+        if self.isFolded == True or self.Chips == 0:
             return
         elif self.isFolded == False:
             #time.sleep(1)
@@ -219,6 +219,8 @@ class Computer(Player):
         self.openingBet = 0 # how much preflop bet
         self.maxBet = 5000 # max bet after river
         self.currentBet = 0 # the amount they currently have in their bet
+        self.isFolded = False
+        self.locPos = locPos
 
     def getCards(self):
         self.isFolded = False
@@ -230,7 +232,7 @@ class Computer(Player):
             self.Cards[i][2] = "BackOfCard.JPG"
 
     def nextTurn(self): # the next turn for the computer is determined
-        if self.isFolded == True:
+        if self.isFolded == True or self.locPos not in game.remainingList or self.Chips == 0:
             return
         elif self.isFolded == False:
             #time.sleep(random.randint(1, 4)//2)
@@ -417,21 +419,17 @@ class Game():
 
         pygame.display.update() # updates the display
 
-    def displayCards(self, position):
-        print(self.remainingList)
-        print(self.remainingPlayers)
-        print(position)
-        print(self.remainingList[position])
-        self.currentPlayer = self.remainingPlayers[self.remainingList[position]]
-        self.currentPlayerX = self.remainingPlayers[self.remainingList[position]][2]
-        self.currentPlayerY = self.remainingPlayers[self.remainingList[position]][3]
-
-        for z in range(2):
+    def displayCards(self, z):
+        for each in range(len(self.remainingList)):
+            self.currentPlayer = self.remainingPlayers[self.remainingList[each]]
+            self.currentPlayerX = self.remainingPlayers[self.remainingList[each]][2]
+            self.currentPlayerY = self.remainingPlayers[self.remainingList[each]][3]
+            if z == 1:
+                self.currentPlayerX = self.currentPlayerX + 75
             self.Card = pygame.image.load(self.currentPlayer[1].Cards[z][2])
             self.Card = pygame.transform.scale(self.Card, assets.cardScale)
             screen.blit(self.Card, (self.currentPlayerX, self.currentPlayerY))
-            self.currentPlayerX = self.currentPlayerX + 75
-            #time.sleep(0.75)
+            time.sleep(0.75)
             pygame.display.update()
 
         self.playerCardsX = 567 # used to reset the value of the x of the cards so it can be repeated in future rounds
@@ -451,15 +449,17 @@ class Game():
         self.updateComputersChips()
 
     def playGame(self):
-        self.dealerButtonLocation = 1 #random.randint(0, 3) # the starting location of the dealer button
         while user.Chips > 0:
-
             self.restart()
             self.remainingList = list(self.remainingPlayers)
+            self.dealerButtonLocation = 1# random.choice(self.remainingList) # the starting location of the dealer button
             self.getCards()
             self.startingAssets()
-            for each in range(len(self.remainingList)):
-                self.displayCards(each)
+            for z in range(2):
+                self.displayCards(z)
+
+            # for each in range(len(self.remainingList)):
+            #     self.displayCards(each)
             self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
 
             for x in range (4):
@@ -554,35 +554,52 @@ class Game():
         pygame.display.update()
 
     def getBlinds(self): # calls all functions relating to the blinds to start each round
-        if self.dealerButtonLocation == 0:
-            self.smallBlindFunction(computer1)
-            self.bigBlindFunction(computer2)
-            self.updateComputersChips()
-            self.playerTurn = 3 # sets the player turn to be the one after the player located at the position after the big blind
+        self.smallBlinder = self.remainingPlayers[self.remainingList[self.dealerButtonLocation]][1]
+        self.bigBlinder = self.remainingPlayers[self.remainingList[self.dealerButtonLocation + 1]][1]
 
-        elif self.dealerButtonLocation == 1:
-            self.smallBlindFunction(computer2)
-            self.bigBlindFunction(computer3)
-            self.updateComputersChips()
-            self.updateUserChips()
-            self.playerTurn = 0
+        self.smallBlindFunction(self.smallBlinder)
+        self.bigBlindFunction(self.bigBlinder)
+        self.updateUserChips()
+        self.updateComputersChips()
+        index = self.dealerButtonLocation + 2
+        if index == 3:
+            index = 0
+        elif index == 4:
+            index = 1
 
-        elif self.dealerButtonLocation == 2:
-            self.smallBlindFunction(computer3)
-            self.bigBlindFunction(user)
-            self.updateComputersChips()
-            self.updateUserChips()
-            self.playerTurn = 1
-
-        elif self.dealerButtonLocation == 3:
-            self.smallBlindFunction(user)
-            self.bigBlindFunction(computer1)
-            self.updateComputersChips()
-            self.updateUserChips()
-            self.playerTurn = 2
-
-        #self.dealerButtonLocation = self.dealerButtonLocation + 1 # moves the dealer button around 1
+        self.playerTurn = self.remainingPlayers[self.remainingList[index]][0]
         self.previousBet = 100
+
+
+        # if self.dealerButtonLocation == 0:
+        #     self.smallBlindFunction(computer1)
+        #     self.bigBlindFunction(computer2)
+        #     self.updateComputersChips()
+        #     self.playerTurn = 3 # sets the player turn to be the one after the player located at the position after the big blind
+        #
+        # elif self.dealerButtonLocation == 1:
+        #     self.smallBlindFunction(computer2)
+        #     self.bigBlindFunction(computer3)
+        #     self.updateComputersChips()
+        #     self.updateUserChips()
+        #     self.playerTurn = 0
+        #
+        # elif self.dealerButtonLocation == 2:
+        #     self.smallBlindFunction(computer3)
+        #     self.bigBlindFunction(user)
+        #     self.updateComputersChips()
+        #     self.updateUserChips()
+        #     self.playerTurn = 1
+        #
+        # elif self.dealerButtonLocation == 3:
+        #     self.smallBlindFunction(user)
+        #     self.bigBlindFunction(computer1)
+        #     self.updateComputersChips()
+        #     self.updateUserChips()
+        #     self.playerTurn = 2
+
+        # self.dealerButtonLocation = self.dealerButtonLocation + 1 # moves the dealer button around 1
+        # self.previousBet = 100
 
     def smallBlindFunction(self, smallBlindPlayer):
         smallBlindPlayer.bet = smallBlindPlayer.bet + self.smallBlind

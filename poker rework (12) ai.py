@@ -27,7 +27,7 @@ class Cards():
                 self.cardList.append([13, "C", "C"+str(number+1)+".JPG"]) # Changed order from F, S, V to V, S, F
             else: # adds the rest of the suit (2-K)to the cardList
                 self.cardList.append([number, "C" , "C"+str(number+1)+".JPG"])
-        for number in range(13): # runs 4 #times to add each suit
+        for number in range(13): # runs 4 times to add each suit
             if number == 0:
                 self.cardList.append([13, "D", "D"+str(number+1)+".JPG"])
             else:
@@ -73,11 +73,11 @@ class User(Player):
             dealer.dealerCards.pop(pick) # removes this selected card from the dealer list so 2 players can not have the same cards
             game.cardCounter = game.cardCounter - 1 # reduces the counter by the number of cards chosen so there are no index errors
 
-    def userTurn(self):
-        if self.isFolded == True:
+    def nextTurn(self):
+        if self.isFolded == True or self.Chips == 0:
             return
         elif self.isFolded == False:
-            #time.sleep(1)
+            time.sleep(1)
             while True:
                 for event in pygame.event.get():
                     if event.type == QUIT or event.type == KEYDOWN and event.key == K_ESCAPE: # checks if the game is being exited
@@ -90,7 +90,7 @@ class User(Player):
                                 screen.blit(assets.gamePress, (723, 600)) # display the pressed button
                                 screen.blit(assets.betButtonText, (726, 610)) # display the text over the top of that
                                 pygame.display.update() # update the screen for new changes
-                                #time.sleep(0.2) # wait 0.2s so there is a visible change in the button
+                                time.sleep(0.2) # wait 0.2s so there is a visible change in the button
                                 screen.blit(assets.userButton, (723, 600)) # returns the buttons to its original look
                                 screen.blit(assets.betButtonText, (726, 610)) # ^^
                                 pygame.display.update()
@@ -103,7 +103,7 @@ class User(Player):
                                 screen.blit(assets.gamePress, (723, 660))
                                 screen.blit(assets.callButtonText, (726, 670))
                                 pygame.display.update()
-                                #time.sleep(0.2)
+                                time.sleep(0.2)
                                 screen.blit(assets.userButton, (723, 660))
                                 screen.blit(assets.callButtonText, (726, 670))
                                 pygame.display.update()
@@ -117,7 +117,7 @@ class User(Player):
                                 screen.blit(assets.gamePress, (833, 600))
                                 screen.blit(assets.foldButtonText, (838, 610))
                                 pygame.display.update()
-                                #time.sleep(0.2)
+                                time.sleep(0.2)
                                 screen.blit(assets.userButton, (833, 600))
                                 screen.blit(assets.foldButtonText, (838, 610))
                                 pygame.display.update()
@@ -137,15 +137,15 @@ class User(Player):
                             if user.Chips > 0: # checks that the user has chips to bet
                                 pygame.draw.rect(screen, Colours._lightGrey, (1015, 635, 80, 40), 0)  # Rect over the top of the increase to cover old text
                                 pygame.draw.rect(screen, Colours._lightGrey, (445, 640, 105, 40), 0)  # Rect over users chips to update the text
-                                self.increaseBet = self.increaseBet + 4900 # increases the bet by 50 as this is the increment cause by the button press
-                                self.Chips = self.Chips - 4900 # takes these chips out of the users bank as they would not gave them
+                                self.increaseBet = self.increaseBet + 50 # increases the bet by 50 as this is the increment cause by the button press
+                                self.Chips = self.Chips - 50 # takes these chips out of the users bank as they would not gave them
                                 self.userIncreaseText = assets.inGameFont.render(str(self.increaseBet), True, Colours._black)  # The text that goes over increase rect
                                 self.userChipsText = assets.inGameFont.render(str(user.Chips), True, Colours._black)  # Text over the new users number of chips
                                 screen.blit(self.userIncreaseText, (1020, 640))  # Displays the new increase over the top
                                 screen.blit(self.userChipsText, (450, 640))  # Displays the new user chips
                                 screen.blit(assets.upBetPress, (950, 600))
                                 pygame.display.update()
-                                #time.sleep(0.12)
+                                time.sleep(0.12)
                                 screen.blit(assets.upBet, (950, 600))  # Back to grey button
                                 pygame.display.update()
 
@@ -166,7 +166,7 @@ class User(Player):
                                     screen.blit(self.userChipsText, (450, 640))
                                     screen.blit(assets.downBetPress, (950, 660))
                                     pygame.display.update()
-                                    #time.sleep(0.12)
+                                    time.sleep(0.12)
                                     screen.blit(assets.downBet, (950, 660))
                                     pygame.display.update()
 
@@ -219,6 +219,9 @@ class Computer(Player):
         self.openingBet = 0 # how much preflop bet
         self.maxBet = 5000 # max bet after river
         self.currentBet = 0 # the amount they currently have in their bet
+        self.minBet = 50
+        self.isFolded = False
+        self.locPos = locPos
 
     def getCards(self):
         self.isFolded = False
@@ -230,16 +233,62 @@ class Computer(Player):
             self.Cards[i][2] = "BackOfCard.JPG"
 
     def nextTurn(self): # the next turn for the computer is determined
-        if self.isFolded == True:
+        self.getCurrentScore()
+        self.getMaxBets()
+        if self.bet == 0:
+            self.bet = 1
+        if self.currentBet == 0:
+            self.currentBet = 1
+        self.betPercent = self.maxBet // self.currentBet
+        if self.isFolded == True or self.locPos not in game.remainingList or self.Chips == 0:
             return
         elif self.isFolded == False:
-            #time.sleep(random.randint(1, 4)//2)
+            if self.bet + 50 < self.maxBet or game.previousBet + 100 < self.maxBet:
+                self.computerBet()
+            elif self.bet +
+            time.sleep(random.randint(1, 4)//2)
+            # self.computerBet()
             self.call()
             game.isEqual()
         # if game.previousBet <= self.maxBet: # if the player before has bet less than the max bet
         #     self.call() # the computer will match the amount of the previous bet
         # elif game.previousBet == 0: # if the player before has not increased the bet
         #     self.check() # the computer will 'check' to see the next cards in the river
+
+    def getMaxBets(self):
+        if game.playerValue[self.locPos] <= 1:
+            self.maxBet = 500
+        elif game.playerValue[self.locPos] in range(2, 4):
+            self.maxBet = 1000
+        elif game.playerValue[self.locPos] in range(4, 6):
+            self.maxBet = 1750
+        elif game.playerValue[self.locPos] in range(6, 8):
+            self.maxBet = 2500
+        elif game.playerValue[self.locPos] in range(8, 9):
+            self.maxBet = 3500
+        elif game.playerValue[self.locPos] in range(10):
+            self.maxBet = 5000
+
+    def getCurrentScore(self):
+        self.currentHand = []
+        self.currentHand.append(self.Cards[0])
+        self.currentHand.append(self.Cards[1])
+        if game.stage > 1:
+            for x in range(len(game.currentRiverDisplayed)):
+                self.currentHand.append(game.currentRiverDisplayed[x])
+        game.getHandValue(self.currentHand, self.locPos)
+        return
+
+    def fold(self):
+        dealer.pot = dealer.pot + self.bet
+        self.Cards = ["", ""]
+        self.bet = 0
+        self.handValue = 0
+        self.isFolded = True
+        del game.remainingPlayers[self.locPos]
+        game.blankCards(user)
+        game.updateUserChips()
+        game.updatePot()
 
     def call(self):
         if self.bet == game.previousBet:
@@ -256,7 +305,8 @@ class Computer(Player):
         pass
 
     def computerBet(self): # this will get the computer to increase their bet
-        pass
+        self.betMultiple = (self.maxBet - self.bet) // 50
+        self.bet = self.bet + (self.minBet * self.betMultiple)
 
 class River():
     def __init__(self):
@@ -357,10 +407,6 @@ class Game():
             self.remainingPlayers[self.remainingList[x]][1].getCards()
 
         # ## Gets cards for each player
-        # user.getUserCards()
-        # computer1.getComputerCards()
-        # computer2.getComputerCards()
-        # computer3.getComputerCards()
         river.getRiverCards()
 
     def blankCards(self, playerToUpdate):
@@ -417,21 +463,17 @@ class Game():
 
         pygame.display.update() # updates the display
 
-    def displayCards(self, position):
-        print(self.remainingList)
-        print(self.remainingPlayers)
-        print(position)
-        print(self.remainingList[position])
-        self.currentPlayer = self.remainingPlayers[self.remainingList[position]]
-        self.currentPlayerX = self.remainingPlayers[self.remainingList[position]][2]
-        self.currentPlayerY = self.remainingPlayers[self.remainingList[position]][3]
-
-        for z in range(2):
+    def displayCards(self, z):
+        for each in range(len(self.remainingList)):
+            self.currentPlayer = self.remainingPlayers[self.remainingList[each]]
+            self.currentPlayerX = self.remainingPlayers[self.remainingList[each]][2]
+            self.currentPlayerY = self.remainingPlayers[self.remainingList[each]][3]
+            if z == 1:
+                self.currentPlayerX = self.currentPlayerX + 75
             self.Card = pygame.image.load(self.currentPlayer[1].Cards[z][2])
             self.Card = pygame.transform.scale(self.Card, assets.cardScale)
             screen.blit(self.Card, (self.currentPlayerX, self.currentPlayerY))
-            self.currentPlayerX = self.currentPlayerX + 75
-            #time.sleep(0.75)
+            time.sleep(0.75)
             pygame.display.update()
 
         self.playerCardsX = 567 # used to reset the value of the x of the cards so it can be repeated in future rounds
@@ -451,23 +493,28 @@ class Game():
         self.updateComputersChips()
 
     def playGame(self):
-        self.dealerButtonLocation = 1 #random.randint(0, 3) # the starting location of the dealer button
         while user.Chips > 0:
-
             self.restart()
             self.remainingList = list(self.remainingPlayers)
+            self.dealerButtonLocation = 1# random.choice(self.remainingList) # the starting location of the dealer button
             self.getCards()
             self.startingAssets()
-            for each in range(len(self.remainingList)):
-                self.displayCards(each)
+            for z in range(2):
+                self.displayCards(z)
             self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
 
             for x in range (4):
                 while not self.betsEqual:
-                    user.userTurn()
-                    computer1.nextTurn()
-                    computer2.nextTurn()
-                    computer3.nextTurn()
+                    for z in range(len(self.remainingList)):
+                        self.remainingPlayers[self.remainingList[self.playerTurn]][1].nextTurn()
+                        self.playerTurn = self.playerTurn + 1
+                        if self.playerTurn == len(self.remainingList):
+                            self.playerTurn = 0
+
+                    # user.nextTurn()
+                    # computer1.nextTurn()
+                    # computer2.nextTurn()
+                    # computer3.nextTurn()
 
                 self.endStage()
 
@@ -482,14 +529,9 @@ class Game():
 
                 if self.stage == 4:
                     for x in range(len(self.remainingPlayers)):
-                        self.getHandValue(self.remainingPlayers[self.remainingList[x]][1].Cards, self.remainingPlayers[self.remainingList[x]][0])
+                        self.fullHand = self.remainingPlayers[self.remainingList[x]][1].Cards + river.riverCards
+                        self.getHandValue(self.fullHand, self.remainingPlayers[self.remainingList[x]][0])
 
-                    # self.getHandValue(user.Cards, 0)
-                    # self.getHandValue(computer1.Cards, 1)
-                    # self.getHandValue(computer2.Cards, 2)
-                    # self.getHandValue(computer3.Cards, 3)
-                    # # whoever has the highest hand gets all the bets
-                    self.playerValue = [8, 8, 6, 8]
                     self.winnerLocation = [i for i, n in enumerate(self.playerValue) if n == max(self.playerValue)]
 
                     if len(self.winnerLocation) == 1:
@@ -554,34 +596,20 @@ class Game():
         pygame.display.update()
 
     def getBlinds(self): # calls all functions relating to the blinds to start each round
-        if self.dealerButtonLocation == 0:
-            self.smallBlindFunction(computer1)
-            self.bigBlindFunction(computer2)
-            self.updateComputersChips()
-            self.playerTurn = 3 # sets the player turn to be the one after the player located at the position after the big blind
+        self.smallBlinder = self.remainingPlayers[self.remainingList[self.dealerButtonLocation]][1]
+        self.bigBlinder = self.remainingPlayers[self.remainingList[self.dealerButtonLocation + 1]][1]
 
-        elif self.dealerButtonLocation == 1:
-            self.smallBlindFunction(computer2)
-            self.bigBlindFunction(computer3)
-            self.updateComputersChips()
-            self.updateUserChips()
-            self.playerTurn = 0
+        self.smallBlindFunction(self.smallBlinder)
+        self.bigBlindFunction(self.bigBlinder)
+        self.updateUserChips()
+        self.updateComputersChips()
+        index = self.dealerButtonLocation + 2
+        if index == 3:
+            index = 0
+        elif index == 4:
+            index = 1
 
-        elif self.dealerButtonLocation == 2:
-            self.smallBlindFunction(computer3)
-            self.bigBlindFunction(user)
-            self.updateComputersChips()
-            self.updateUserChips()
-            self.playerTurn = 1
-
-        elif self.dealerButtonLocation == 3:
-            self.smallBlindFunction(user)
-            self.bigBlindFunction(computer1)
-            self.updateComputersChips()
-            self.updateUserChips()
-            self.playerTurn = 2
-
-        #self.dealerButtonLocation = self.dealerButtonLocation + 1 # moves the dealer button around 1
+        self.playerTurn = self.remainingPlayers[self.remainingList[index - 1]][0]
         self.previousBet = 100
 
     def smallBlindFunction(self, smallBlindPlayer):
@@ -622,6 +650,7 @@ class Game():
         self.remainingPlayers = {}
         self.stage = 1 # 0 = pre 1 = flop 2 = turn 3 = river
         self.betsEqual = False
+        self.currentRiverDisplayed = []
 
         self.constructRemainingPlayers()
         cards.getCardList() # gets all cards
@@ -637,33 +666,36 @@ class Game():
             for i in range(3):
                 self.flopCards = pygame.image.load(river.riverCards[i][2])
                 self.flopCards = pygame.transform.scale(self.flopCards, assets.cardScale)
+                self.currentRiverDisplayed.append(river.riverCards[i])
                 screen.blit(self.flopCards, (self.flopX, 306))
                 self.flopX = self.flopX - 125
-                #time.sleep(0.5)
+                time.sleep(0.5)
                 pygame.display.update()
 
     def displayTurn(self): # displays the fourth card in the river (turn)
         self.turnCard = pygame.image.load(river.riverCards[3][2])
         self.turnCard = pygame.transform.scale(self.turnCard, assets.cardScale)
         screen.blit(self.turnCard, (475, 306))
-        #time.sleep(0.5)
+        self.currentRiverDisplayed.append(river.riverCards[3])
+        time.sleep(0.5)
         pygame.display.update()
 
     def displayRiver(self): # displays the final card (river)
         self.riverCard = pygame.image.load(river.riverCards[4][2])
         self.riverCard = pygame.transform.scale(self.riverCard, assets.cardScale)
         screen.blit(self.riverCard, (350, 306))
-        #time.sleep(0.5)
+        self.currentRiverDisplayed.append(river.riverCards[4])
+        time.sleep(0.5)
         pygame.display.update()
 
     def getHandValue(self, playerCards, playerValPos): # gets and adds the value of each players hand to the list playerValue
-        self.userHand.extend(playerCards) # adds the full 7 card each player has available to them to the temp variable so all cards can be analysed
-        self.riverCards = river.riverCards # changes the cards stored in the river from the river class into a local variable river so they are not overwritten
-        self.userHand.extend(self.riverCards) # adds the local river cards to the list with all the cards to allow analysis of all possible hands in play
-
-        for x in range(7):
-            self.suitList.append(self.userHand[x][1]) # takes the suit from each card and puts it into a seperate list
-            self.valueList.append(self.userHand[x][0]) # # takes the values of the cards anf puts it into the seperate lists
+        # self.userHand.extend(playerCards) # adds the full 7 card each player has available to them to the temp variable so all cards can be analysed
+        # self.riverCards = river.riverCards # changes the cards stored in the river from the river class into a local variable river so they are not overwritten
+        # self.userHand.extend(self.riverCards) # adds the local river cards to the list with all the cards to allow analysis of all possible hands in play
+        print(playerCards)
+        for x in range(len(playerCards)):
+            self.suitList.append(playerCards[x][1]) # takes the suit from each card and puts it into a seperate list
+            self.valueList.append(playerCards[x][0]) # takes the values of the cards anf puts it into the seperate lists
 
         self.valueList.sort() # sorts this list into numerical order
         self.bestHandValues = self.valueList[2:] # takes the lowest two values and removes them so the top 5 scores are used\
@@ -694,7 +726,7 @@ class Game():
         if self.suitList.count("C") == 5 and self.totBestHand == 55 or self.suitList.count("D") == 5 and self.totBestHand == 55 or self.suitList.count("H") == 5 and self.totBestHand == 55 or self.suitList.count("S") == 5 and self.totBestHand == 55:
             self.playerValue[playerValPos] = 10
             return
-        # if the number of #times 1 suit appears is 5 and their best hand is 55 (10 + J + Q + K + A)
+        # if the number of times 1 suit appears is 5 and their best hand is 55 (10 + J + Q + K + A)
     def isStraightFlush(self, playerValPos):
         if self.Straight == True and self.Flush == True:
             self.playerValue[playerValPos] = 9
@@ -705,7 +737,7 @@ class Game():
             if self.valueList.count(x) == 4:
                 self.playerValue[playerValPos] = 8
                 return
-        # counts the number of #times each value occurs if it = 4 then it is 4 of a kind
+        # counts the number of times each value occurs if it = 4 then it is 4 of a kind
     def isFullHouse(self, playerValPos):
         if self.ThreeOak == True and self.pair == True:
             self.playerValue[playerValPos] = 7
@@ -716,7 +748,7 @@ class Game():
             self.playerValue[playerValPos] = 6
             self.Flush = True
             return
-        # counts the number of #times eaach suit appears
+        # counts the number of times eaach suit appears
     def isStraight(self, playerValPos):
         for i in range (len(self.valueList)):
             if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1 and self.valueList[i-2] - self.valueList[i-3] == 1 and self.valueList[i-3] - self.valueList[i-4] == 1:
@@ -732,7 +764,7 @@ class Game():
                     self.valueList.remove(x)
                 self.ThreeOak = True
                 return
-        # counts the number of #times each value appears and if it = 3 it is three of a kind
+        # counts the number of times each value appears and if it = 3 it is three of a kind
     def isTwoPair(self, playerValPos):
         if self.pair == True:
             for x in range(1, 14):
@@ -748,7 +780,7 @@ class Game():
                 self.valueList.remove(x)
                 self.pair = True
                 return
-        # counts the number of #times each value appears and if it = 2 it is two of a kind
+        # counts the number of times each value appears and if it = 2 it is two of a kind
 
 class Help():
     def __init__(self):
@@ -830,7 +862,7 @@ class Help():
                             screen.blit(self.nextPagePress, (1075, 620))
                             screen.blit(assets.nextButtonText, (1110, 635))
                             pygame.display.update()
-                            #time.sleep(0.1)
+                            time.sleep(0.1)
                             self.page2()
 
                     if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
@@ -838,7 +870,7 @@ class Help():
                             screen.blit(self.backPagePress, (30, 620))
                             screen.blit(assets.backButtonText, (65, 635))
                             pygame.display.update()
-                            #time.sleep(0.1)
+                            time.sleep(0.1)
                             menu.displayMenu()
 
     def page2(self):
@@ -868,7 +900,7 @@ class Help():
                             screen.blit(self.nextPagePress, (1075, 620))
                             screen.blit(assets.nextButtonText, (1110, 635))
                             pygame.display.update()
-                            #time.sleep(0.1)
+                            time.sleep(0.1)
                             self.page3()
 
                     if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
@@ -876,7 +908,7 @@ class Help():
                             screen.blit(self.backPagePress, (30, 620))
                             screen.blit(assets.backButtonText, (65, 635))
                             pygame.display.update()
-                            #time.sleep(0.1)
+                            time.sleep(0.1)
                             self.page1()
 
     def page3(self):
@@ -988,7 +1020,7 @@ class Help():
                             screen.blit(self.backPagePress, (30, 620))
                             screen.blit(assets.backButtonText, (65, 635))
                             pygame.display.update()
-                            #time.sleep(0.1)
+                            time.sleep(0.1)
                             self.page2()
 
 class Menu():
@@ -1026,7 +1058,7 @@ class Menu():
                             screen.blit(assets.menuButtonPress, (390, 185.5))
                             screen.blit(assets.playText, (587, 200))
                             pygame.display.update()
-                            #time.sleep(0.2)
+                            time.sleep(0.2)
                             game.playGame()
 
                         if pygame.mouse.get_pos()[1] >= 285.5 and pygame.mouse.get_pos()[1] <= 365.5:
@@ -1039,14 +1071,14 @@ class Menu():
                             screen.blit(assets.menuButtonPress, (390, 485.5))
                             screen.blit(assets.helpText, (582.5, 500))
                             pygame.display.update()
-                            #time.sleep(0.2)
+                            time.sleep(0.2)
                             help.page1()
 
                         if pygame.mouse.get_pos()[1] >= 585.5 and pygame.mouse.get_pos()[1] <= 665.5:
                             screen.blit(assets.menuButtonPress, (390, 585.5))
                             screen.blit(assets.exitText, (590.5, 600))
                             pygame.display.update()
-                            #time.sleep(0.2)
+                            time.sleep(0.2)
                             pygame.quit()
                             sys.exit()
 
