@@ -235,25 +235,31 @@ class Computer(Player):
     def nextTurn(self): # the next turn for the computer is determined
         self.getCurrentScore()
         self.getMaxBets()
+        time.sleep(random.randint(1, 4)//2)
         if self.bet == 0:
             self.bet = 1
         if self.currentBet == 0:
             self.currentBet = 1
-        self.betPercent = self.maxBet // self.currentBet
+        if game.previousBet = 0:
+            game.previousBet = 1
+
+        self.betPercent = self.currentBet // self.maxBet # the percentage of the total amount they could bet compared to how much they have currently bet small / big
+        self.multipleFromMaxBet = self.maxBet // self.currentBet # how many times big the max bet is than the current amount they have bet big / small
+        self.prevBetMultiple = self.maxBet // game.previousBet # how many times bigger the max bet is compared to the previous players bet big / small
+
         if self.isFolded == True or self.locPos not in game.remainingList or self.Chips == 0:
             return
+
         elif self.isFolded == False:
-            if self.bet + 50 < self.maxBet or game.previousBet + 100 < self.maxBet:
+            if self.multipleFromMaxBet > 4:
+                print(420)
                 self.computerBet()
-            elif self.bet +
-            time.sleep(random.randint(1, 4)//2)
-            # self.computerBet()
-            self.call()
+            elif self.multipleFromMaxBet <= 4:
+                print(69)
+                self.call()
+            else:
+                self.fold()
             game.isEqual()
-        # if game.previousBet <= self.maxBet: # if the player before has bet less than the max bet
-        #     self.call() # the computer will match the amount of the previous bet
-        # elif game.previousBet == 0: # if the player before has not increased the bet
-        #     self.check() # the computer will 'check' to see the next cards in the river
 
     def getMaxBets(self):
         if game.playerValue[self.locPos] <= 1:
@@ -306,6 +312,7 @@ class Computer(Player):
 
     def computerBet(self): # this will get the computer to increase their bet
         self.betMultiple = (self.maxBet - self.bet) // 50
+        print(self.betMultiple)
         self.bet = self.bet + (self.minBet * self.betMultiple)
 
 class River():
