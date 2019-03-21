@@ -5,6 +5,7 @@ import pygame
 import sys
 import time
 from pygame.locals import *
+import pdb
 
 pygame.init()
 pygame.font.init()
@@ -499,6 +500,7 @@ class Game():
             for z in range(2):
                 self.displayCards(z)
             self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
+            pdb.set_trace()
 
             for x in range (4):
                 for z in range(len(self.remainingList)):
