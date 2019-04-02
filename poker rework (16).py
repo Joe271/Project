@@ -100,7 +100,10 @@ class User(Player):
                                 screen.blit(assets.betButtonText, (726, 610)) # ^^
                                 pygame.display.update()
                                 self.makeBet() # calls the function that allows the user to increase their bet
+<<<<<<< HEAD
                                 game.moveList[self.locPos] = "bet"
+=======
+>>>>>>> 0359d3d094230e95f1106bc17e52e07760218406
                                 return
 
                         if pygame.mouse.get_pos()[0] >= 723 and pygame.mouse.get_pos()[1] >= 660:  # Call button
@@ -113,7 +116,10 @@ class User(Player):
                                 screen.blit(assets.callButtonText, (726, 670))
                                 pygame.display.update()
                                 self.call()
+<<<<<<< HEAD
                                 game.moveList[self.locPos] = "call"
+=======
+>>>>>>> 0359d3d094230e95f1106bc17e52e07760218406
                                 return
                                 # this button will allow the user to match the previous bet as this is the minimum they have to bet without folding
 
@@ -127,7 +133,10 @@ class User(Player):
                                 screen.blit(assets.foldButtonText, (838, 610))
                                 pygame.display.update()
                                 self.fold()
+<<<<<<< HEAD
                                 game.moveList[self.locPos] = "fold"
+=======
+>>>>>>> 0359d3d094230e95f1106bc17e52e07760218406
                                 return
                                 # this will allow the user to get out of the round if they think that they cannot win
 
@@ -296,7 +305,10 @@ class Computer(Player):
         #game.remainingList.remove(self.locPos)
         game.remainingPlayers[self.locPos] = 10
         game.remainingList[self.locPos] = 10
+<<<<<<< HEAD
         game.moveList[self.locPos] = "fold"
+=======
+>>>>>>> 0359d3d094230e95f1106bc17e52e07760218406
 
     def call(self):
         if self.bet == game.previousBet:
@@ -319,8 +331,11 @@ class Computer(Player):
         if self.Chips < 0:
             self.bet = self.bet + (self.bet + self.Chips)
 
+<<<<<<< HEAD
         game.moveList[self.locPos] = "call"
 
+=======
+>>>>>>> 0359d3d094230e95f1106bc17e52e07760218406
     def check(self): # will just pass to the next player or onto the next cards from the river
         return
 
@@ -341,10 +356,15 @@ class Computer(Player):
             self.bet = self.betBefore
             self.Chips = 0
 
+<<<<<<< HEAD
             game.remainingPlayers[self.locPos] = 10
             game.remainingList[self.locPos] = 10
 
         game.moveList[self.locPos] = "bet"
+=======
+        game.remainingPlayers[self.locPos] = 10
+        game.remainingList[self.locPos] = 10
+>>>>>>> 0359d3d094230e95f1106bc17e52e07760218406
 
 class River():
     def __init__(self):
@@ -555,9 +575,14 @@ class Game():
             self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
 
             for x in range (4): # 4 is the number of stages (pre,  flop, turn, river)
+<<<<<<< HEAD
                 self.moveList = ["", "", "", ""]
                 for z in range(4 - self.remainingList.count(10)): # goes through each player still available
                     while self.betsEqual == False:
+=======
+                for z in range(4): # goes through each player
+                    while self.betsEqual == False or self.betsEqual == True and self.playerCount <= 4:
+>>>>>>> 0359d3d094230e95f1106bc17e52e07760218406
                         if self.remainingList.count(10) == 3: # if there is only one palyer left not folded
                             self.foldWinnerIndex = [i for i, x in enumerate(self.remainingList) if x != 10]
                             self.foldWinner = self.remainingPlayers[self.foldWinnerIndex[0]][1]
@@ -582,6 +607,10 @@ class Game():
                         self.updateComputersChips()
                         #if self.thisPlayer.isFolded == True and self.thisPlayer.foldThisTurn == False or self.thisPlayer.isFolded == False:
                         self.playerTurn = self.playerTurn + 1
+<<<<<<< HEAD
+=======
+                        self.playerCount = self.playerCount + 1
+>>>>>>> 0359d3d094230e95f1106bc17e52e07760218406
                         self.isEqual()
                         if self.thisPlayer.bet != 0:
                             self.previousBet = self.thisPlayer.bet
