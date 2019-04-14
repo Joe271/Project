@@ -20,28 +20,42 @@ class Colours:
 
 class Cards():
     def __init__(self):
+        self.aceValue = 13
+        self.kingValue = 12
+        self.queenValue = 11
+        self.jackValue = 10
+        self.tenValue = 9
+        self.nineValue = 8
+        self.eightValue = 7
+        self.sevenValue = 6
+        self.sixValue = 5
+        self.fiveValue = 4
+        self.fourValue = 3
+        self.threeValue = 2
+        self.twoValue = 1
+
         self.getCardList() # calls function getCardList
 
     def getCardList(self): # appends all of the cards with their: value, suit and file name
         self.cardList = [] # creates empty list cardList which will store the cards
         for number in range(13): # loops through the cardList construction
             if number == 0: # for the first item (ace) the value is the highest but the number on the card is lowest
-                self.cardList.append([13, "C", "C"+str(number+1)+".JPG"]) # Changed order from F, S, V to V, S, F
+                self.cardList.append([self.aceValue, "C", "C"+str(number+1)+".JPG"]) # Changed order from F, S, V to V, S, F
             else: # adds the rest of the suit (2-K)to the cardList
                 self.cardList.append([number, "C" , "C"+str(number+1)+".JPG"])
         for number in range(13): # runs 4 times to add each suit
             if number == 0:
-                self.cardList.append([13, "D", "D"+str(number+1)+".JPG"])
+                self.cardList.append([self.aceValue, "D", "D"+str(number+1)+".JPG"])
             else:
                 self.cardList.append([number, "D", "D"+str(number+1)+".JPG"])
         for number in range(13):
             if number == 0:
-                self.cardList.append([13, "H", "H"+str(number+1)+".JPG"])
+                self.cardList.append([self.aceValue, "H", "H"+str(number+1)+".JPG"])
             else:
                 self.cardList.append([number, "H", "H"+str(number+1)+".JPG"])
         for number in range(13):
             if number == 0:
-                self.cardList.append([13, "S", "S"+str(number+1)+".JPG"])
+                self.cardList.append([self.aceValue, "S", "S"+str(number+1)+".JPG"])
             else:
                 self.cardList.append([number, "S", "S"+str(number+1)+".JPG"])
 
@@ -68,6 +82,34 @@ class User(Player):
     def __init__(self, locPos):
         super().__init__()
         self.locPos = locPos
+        self.betButtonX1 = 723
+        self.betButtonX2 = 823
+        self.betButtonY1 = 600
+        self.betButtonY2 = 650
+        self.betButtonTextX = 726
+        self.betButtonTextY = 610
+        self.callButtonY1 = 660
+        self.callButtonX1 = 823
+        self.callButtonY2 = 710
+        self.callButtonTextY = 670
+        self.foldButtonX1 = 833
+        self.foldButtonX2 = 933
+        self.foldButtonTextX = 838
+        self.increaseBetX1 = 950
+        self.increaseBetX2 = 1000
+        self.betCoverX = 1015
+        self.betCoverY = 635
+        self.betCoverWidth = 80
+        self.betCoverHeight = 40
+        self.chipsCoverX = 445
+        self.chipsCoverY = 640
+        self.chipsCoverWidth = 105
+        self.betChange = 50
+        self.increaseTextBoxX = 1020
+        self.chipsTextX = 450
+        self.addBetX = 1095
+        self.computerBetBoxPos = (557.5, 485)
+        self.betTextPos = (562.5, 490)
 
     def getCards(self):
         self.isFolded = False
@@ -77,7 +119,7 @@ class User(Player):
             dealer.dealerCards.pop(pick) # removes this selected card from the dealer list so 2 players can not have the same cards
             game.cardCounter = game.cardCounter - 1 # reduces the counter by the number of cards chosen so there are no index errors
 
-    def nextTurn(self):
+    def nextTurn(self, stage):
         if self.isFolded == True or self.Chips == 0:
             self.foldThisTurn = False
             return
@@ -90,46 +132,45 @@ class User(Player):
                         sys.exit() # closes the window
                     # Bet button
                     if event.type == pygame.MOUSEBUTTONDOWN: # if a click is detected
-                        if pygame.mouse.get_pos()[0] >= 723 and pygame.mouse.get_pos()[1] >= 600: # if the mouse x is greater than 723 and the y is greater than 600
-                            if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 650: # if the mouse x is less than 823 and y is less than 650
-                                screen.blit(assets.gamePress, (723, 600)) # display the pressed button
-                                screen.blit(assets.betButtonText, (726, 610)) # display the text over the top of that
+                        if pygame.mouse.get_pos()[0] >= self.betButtonX1 and pygame.mouse.get_pos()[1] >= self.betButtonY1: # if the mouse x is greater than 723 and the y is greater than 600
+                            if pygame.mouse.get_pos()[0] <= self.betButtonX2 and pygame.mouse.get_pos()[1] <= self.betButtonY2: # if the mouse x is less than 823 and y is less than 650
+                                screen.blit(assets.gamePress, (self.betButtonX1, self.betButtonY1)) # display the pressed button
+                                screen.blit(assets.betButtonText, (self.betButtonTextX, self.betButtonTextY)) # display the text over the top of that
                                 pygame.display.update() # update the screen for new changes
                                 time.sleep(0.2) # wait 0.2s so there is a visible change in the button
-                                screen.blit(assets.userButton, (723, 600)) # returns the buttons to its original look
-                                screen.blit(assets.betButtonText, (726, 610)) # ^^
+                                screen.blit(assets.userButton, (self.betButtonX1, self.betButtonY1)) # returns the buttons to its original look
+                                screen.blit(assets.betButtonText, (self.betButtonTextX, self.betButtonTextY)) # ^^
                                 pygame.display.update()
                                 self.makeBet() # calls the function that allows the user to increase their bet
                                 game.moveList[self.locPos] = "bet"
                                 return
 
-                        if pygame.mouse.get_pos()[0] >= 723 and pygame.mouse.get_pos()[1] >= 660:  # Call button
-                            if pygame.mouse.get_pos()[0] <= 823 and pygame.mouse.get_pos()[1] <= 710:
-                                screen.blit(assets.gamePress, (723, 660))
-                                screen.blit(assets.callButtonText, (726, 670))
+                        elif pygame.mouse.get_pos()[0] >= self.betButtonX1 and pygame.mouse.get_pos()[1] >= self.callButtonY1:  # Call button
+                            if pygame.mouse.get_pos()[0] <= self.callButtonX1 and pygame.mouse.get_pos()[1] <= self.callButtonY2:
+                                screen.blit(assets.gamePress, (self.betButtonX1, self.callButtonY))
+                                screen.blit(assets.callButtonText, (self.callButtonY2, self.callButtonTextY))
                                 pygame.display.update()
                                 time.sleep(0.2)
-                                screen.blit(assets.userButton, (723, 660))
-                                screen.blit(assets.callButtonText, (726, 670))
+                                screen.blit(assets.userButton, (self.betButtonX1, self.callButtonY1))
+                                screen.blit(assets.callButtonText, (self.betButtonTextX, self.callButtonTextY))
                                 pygame.display.update()
                                 self.call()
                                 game.moveList[self.locPos] = "call"
                                 return
                                 # this button will allow the user to match the previous bet as this is the minimum they have to bet without folding
 
-                        if pygame.mouse.get_pos()[0] >=833 and pygame.mouse.get_pos()[1] >= 600: # Fold button
-                            if pygame.mouse.get_pos()[0] <= 933 and pygame.mouse.get_pos()[1] <= 650:
-                                screen.blit(assets.gamePress, (833, 600))
-                                screen.blit(assets.foldButtonText, (838, 610))
+                        elif pygame.mouse.get_pos()[0] >= self.foldButtonX1 and pygame.mouse.get_pos()[1] >= self.betButtonY1: # Fold button
+                            if pygame.mouse.get_pos()[0] <= self.foldButtonX2 and pygame.mouse.get_pos()[1] <= self.betButtonY2:
+                                screen.blit(assets.gamePress, (self.foldButtonX1, self.betButtonY1))
+                                screen.blit(assets.foldButtonText, (self.foldButtonTextX, self.betButtonTextY))
                                 pygame.display.update()
                                 time.sleep(0.2)
-                                screen.blit(assets.userButton, (833, 600))
-                                screen.blit(assets.foldButtonText, (838, 610))
+                                screen.blit(assets.userButton, (self.foldButtonX1, self.betButtonY1))
+                                screen.blit(assets.foldButtonText, (self.foldButtonTextX, self.betButtonTextY))
                                 pygame.display.update()
                                 self.fold()
                                 game.moveList[self.locPos] = "fold"
-                                return
-                                # this will allow the user to get out of the round if they think that they cannot win
+                                return # this will allow the user to get out of the round if they think that they cannot win
 
     def makeBet(self): # the function allowing the user to increase their bet
         self.increaseBet = self.increaseBet + game.previousBet
@@ -138,56 +179,56 @@ class User(Player):
         while self.betting:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if pygame.mouse.get_pos()[0] >= 950 and pygame.mouse.get_pos()[1] >= 600:  # Increase bet button
-                        if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 650:
+                    if pygame.mouse.get_pos()[0] >= self.increaseBetX1 and pygame.mouse.get_pos()[1] >= self.betButtonY1:  # Increase bet button
+                        if pygame.mouse.get_pos()[0] <= self.increaseBetX2 and pygame.mouse.get_pos()[1] <= self.betButtonY2:
                             if user.Chips > 0: # checks that the user has chips to bet
-                                pygame.draw.rect(screen, Colours._lightGrey, (1015, 635, 80, 40), 0)  # Rect over the top of the increase to cover old text
-                                pygame.draw.rect(screen, Colours._lightGrey, (445, 640, 105, 40), 0)  # Rect over users chips to update the text
-                                self.increaseBet = self.increaseBet + 50 # increases the bet by 50 as this is the increment cause by the button press
-                                self.Chips = self.Chips - 50 # takes these chips out of the users bank as they would not gave them
+                                pygame.draw.rect(screen, Colours._lightGrey, (self.betCoverX, self.betCoverY, self.betCoverWidth, self.betCoverHeight), 0)  # Rect over the top of the increase to cover old text
+                                pygame.draw.rect(screen, Colours._lightGrey, (self.chipsCoverX, self.chipsCoverY, self.chipsCoverWidth, self.betCoverHeight), 0)  # Rect over users chips to update the text
+                                self.increaseBet = self.increaseBet + self.betChange # increases the bet by 50 as this is the increment cause by the button press
+                                self.Chips = self.Chips - self.betChange # takes these chips out of the users bank as they would not gave them
                                 self.userIncreaseText = assets.inGameFont.render(str(self.increaseBet), True, Colours._black)  # The text that goes over increase rect
                                 self.userChipsText = assets.inGameFont.render(str(user.Chips), True, Colours._black)  # Text over the new users number of chips
-                                screen.blit(self.userIncreaseText, (1020, 640))  # Displays the new increase over the top
-                                screen.blit(self.userChipsText, (450, 640))  # Displays the new user chips
-                                screen.blit(assets.upBetPress, (950, 600))
+                                screen.blit(self.userIncreaseText, (self.increaseTextBoxX, self.chipsCoverY))  # Displays the new increase over the top
+                                screen.blit(self.userChipsText, (self.chipsTextX, self.chipsCoverY))  # Displays the new user chips
+                                screen.blit(assets.upBetPress, (self.increaseBetX1, self.betButtonY1))
                                 pygame.display.update()
                                 time.sleep(0.12)
-                                screen.blit(assets.upBet, (950, 600))  # Back to grey button
+                                screen.blit(assets.upBet, (self.increaseBetX1, self.betButtonY1))  # Back to grey button
                                 pygame.display.update()
 
                             else: # if the user does not have enough chips to bet this will stop then getting negative chips
                                 user.Chips = 0
 
                     if self.increaseBet > game.previousBet:
-                        if pygame.mouse.get_pos()[0] >= 950 and pygame.mouse.get_pos()[1] >= 660:  # Decrease bet button
-                            if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
+                        if pygame.mouse.get_pos()[0] >= self.increaseBetX1 and pygame.mouse.get_pos()[1] >= self.callButtonY1:  # Decrease bet button
+                            if pygame.mouse.get_pos()[0] <= self.increaseBetX2 and pygame.mouse.get_pos()[1] <= self.callButtonY2:
                                 if self.increaseBet > 0:
-                                    pygame.draw.rect(screen, Colours._lightGrey, (1015, 635, 80, 40), 0)
-                                    pygame.draw.rect(screen, Colours._lightGrey, (445, 640, 105, 40), 0)
-                                    self.increaseBet = self.increaseBet - 50 # same as the previous section but reversed
-                                    user.Chips = user.Chips + 50 # adds the chips taken from the increase and returned to bank
+                                    pygame.draw.rect(screen, Colours._lightGrey, (self.betCoverX, self.betCoverY, self.betCoverWidth, self.betCoverHeight), 0)
+                                    pygame.draw.rect(screen, Colours._lightGrey, (self.chipsCoverX, self.chipsCoverY, self.chipsCoverWidth, self.betCoverHeight), 0)
+                                    self.increaseBet = self.increaseBet - self.betChange # same as the previous section but reversed
+                                    user.Chips = user.Chips + self.betChange # adds the chips taken from the increase and returned to bank
                                     self.userIncreaseText = assets.inGameFont.render(str(self.increaseBet), True, Colours._black)
                                     self.userChipsText = assets.inGameFont.render(str(self.Chips), True, Colours._black)
-                                    screen.blit(self.userIncreaseText, (1020, 640))
-                                    screen.blit(self.userChipsText, (450, 640))
-                                    screen.blit(assets.downBetPress, (950, 660))
+                                    screen.blit(self.userIncreaseText, (self.increaseTextBoxX, self.chipsCoverY))
+                                    screen.blit(self.userChipsText, (self.chipsTextX, self.chipsCoverY))
+                                    screen.blit(assets.downBetPress, (self.increaseBetX1, self.callButtonY1))
                                     pygame.display.update()
                                     time.sleep(0.12)
-                                    screen.blit(assets.downBet, (950, 660))
+                                    screen.blit(assets.downBet, (self.increaseBetX1, self.callButtonY1))
                                     pygame.display.update()
 
-                    if pygame.mouse.get_pos()[0] >= 1015 and pygame.mouse.get_pos()[1] >= 635:  # Add increase to total bet
-                        if pygame.mouse.get_pos()[0] <= 1095 and pygame.mouse.get_pos()[1] <= 670:
+                    if pygame.mouse.get_pos()[0] >= self.betCoverX and pygame.mouse.get_pos()[1] >= self.betCoverY:  # Add increase to total bet
+                        if pygame.mouse.get_pos()[0] <= self.addBetX and pygame.mouse.get_pos()[1] <= self.callButtonTextY:
                             # add thing for if it is less than previous bet say no
                             self.bet = self.bet + self.increaseBet
                             self.increaseBet = 0
-                            screen.blit(assets.computerBetBox, (557.5, 485))
+                            screen.blit(assets.computerBetBox, self.computerBetBoxPos)
                             # self.betBox = pygame.draw.rect(screen, Colours.lightGrey, (557.5, 485, 165, 40))
                             self.betText = assets.inGameFont.render("Bet: " + str(user.bet), True, (Colours._black))
-                            screen.blit(self.betText, (562.5, 490))
-                            pygame.draw.rect(screen, Colours._lightGrey, (1015, 635, 80, 40), 0)
+                            screen.blit(self.betText, (self.betTextPos))
+                            pygame.draw.rect(screen, Colours._lightGrey, (self.betCoverX, self.betCoverY, self.betCoverWidth, self.betCoverHeight), 0)
                             self.userIncreaseText = assets.inGameFont.render(str(self.increaseBet), True, Colours._black)
-                            screen.blit(self.userIncreaseText, (1020, 640))
+                            screen.blit(self.userIncreaseText, (self.betTextPos, self.chipsCoverY))
                             pygame.display.update()
                             self.betting = False
                             # if the user clicks the number to increase this amount will be added to their bet and then the next player will have their turn
@@ -238,7 +279,17 @@ class Computer(Player):
             game.cardCounter = game.cardCounter - 1
             self.Cards[i][2] = "BackOfCard.JPG"
 
-    def nextTurn(self): # the next turn for the computer is determined
+    def getTablePosition(self):
+        if game.bigBlinder[0] == self.locPos - 1:
+            self.tablePosition = "Early"
+
+        elif game.bigBlinder[0] == self.locPos + 2 or game.bigBlinder[0] == self.locPos - 2:
+            self.tablePosition = "Middle"
+
+        elif game.bigBlinder[0] == self.locPos - 3 or game.bigBlinder[0] == self.locPos + 1:
+            self.tablePosition = "Late"
+
+    def nextTurn(self, stage): # the next turn for the computer is determined
         #time.sleep(1)
         self.getCurrentScore()
         self.getMaxBets()
@@ -248,15 +299,27 @@ class Computer(Player):
             return
 
         elif self.isFolded == False:
-            if game.previousBet + 200 < self.maxBet:
-                self.computerBet()
-            elif game.previousBet + 200 > self.maxBet:
-                self.call()
-            else:
-                self.fold()
+            if stage == "pre-flop":
+                self.playPreFlop()
+
+            elif stage == "flop":
+                self.playFlop()
+
+            elif stage == "turn":
+                self.playRiver()
+
+            elif stage == "river":
+                self.playRiver()
 
         if self.bet != 0:
-             game.previousBet = self.bet
+            game.previousBet = self.bet
+
+    def playPreFlop(self):
+        if self.currentScore == 1:
+            if self.Cards[0][0] in range(11, 14):
+                self.computerBet()
+            elif self.Cards[0][0] in range(9, 11):
+                pass
 
     def getMaxBets(self):
         if game.playerValue[self.locPos] <= 1:
@@ -280,6 +343,7 @@ class Computer(Player):
             for x in range(len(game.currentRiverDisplayed)):
                 self.currentHand.append(game.currentRiverDisplayed[x])
         game.getHandValue(self.currentHand, self.locPos)
+        self.currentScore = game.playerValue[self.locPos]
         return
 
     def fold(self):
@@ -436,15 +500,40 @@ class Assets(): # All assets but cards
 
 class Game():
     def __init__(self):
-
+        self.compCardY = 10
+        self.backLoc = (0, 0)
+        self.tableLoc = (150, 150)
+        self.backButLoc = (30, 620)
+        self.backButTextLoc = (65, 625)
+        self.cardWidth = 75
+        self.potBoxLoc = (557.5, 246)
+        self.potTextLoc = (562.5, 251)
+        self.comp1BetBoxLoc = (310.5, 178)
+        self.comp2BetBoxLoc = (557, 178)
+        self.comp3BetBoxLoc = (803.5, 178)
+        self.chipsBackY = 123
+        self.comp1ChipsTextLoc = (334, 119)
+        self.comp2ChipsTextLoc = (581, 119)
+        self.comp3ChipsTextLoc = (824, 119)
+        self.comp1BetTextLoc = (315.5, 183)
+        self.comp2BetTextLoc = (562, 183)
+        self.comp3BetTextLoc = (808.5, 183)
+        self.userChipsRectLoc = (445, 600, 105, 80)
+        self.userBetBoxLoc = (557.5, 485)
+        self.userBetTextLoc = (562.5, 490)
+        self.loseLoc = (100, 100)
+        self.flopY = 306
+        self.flopDiff = 125
+        self.turnLoc = (475, 306)
+        self.riverLoc = (350, 306)
         self.restart() # sets all variables to their original value at the start of the game
 
     def getCards(self): # calls all of the functions that gives the players cards
 
         for x in range(len(self.remainingList)):
-            if self.remainingList[x] == 10 :
+            if self.remainingList[x] == 10:
                 pass
-            elif self.remainingList[x] != 10 :
+            elif self.remainingList[x] != 10:
                 self.remainingPlayers[self.remainingList[x]][1].getCards()
 
         # ## Gets cards for each player
@@ -453,25 +542,25 @@ class Game():
     def blankCards(self, playerToUpdate):
         if playerToUpdate == user or playerToUpdate == all:
             for x in range(2):
-                screen.blit(assets.blankCard, (self.playerCardsX, 600))
-                self.playerCardsX = self.playerCardsX + 75
+                screen.blit(assets.blankCard, (self.playerCardsX, user.betButtonY1))
+                self.playerCardsX = self.playerCardsX + self.cardWidth
 
         self.playerCardsX = 567
 
         if playerToUpdate == computer2 or playerToUpdate == all:
             for x in range(2):
-                screen.blit(assets.blankCard, (self.playerCardsX, 10))
-                self.playerCardsX = self.playerCardsX + 75
+                screen.blit(assets.blankCard, (self.playerCardsX, self.compCardY))
+                self.playerCardsX = self.playerCardsX + self.cardWidth
 
         if playerToUpdate == computer1 or playerToUpdate == all:
             for x in range(2):
-                screen.blit(assets.blankCard, (self.comp1X, 10))
-                self.comp1X = self.comp1X + 75
+                screen.blit(assets.blankCard, (self.comp1X, self.compCardY))
+                self.comp1X = self.comp1X + self.cardWidth
 
         if playerToUpdate == computer3 or playerToUpdate == all:
             for x in range(2):
-                screen.blit(assets.blankCard, (self.comp3X, 10))
-                self.comp3X = self.comp3X + 75
+                screen.blit(assets.blankCard, (self.comp3X, self.compCardY))
+                self.comp3X = self.comp3X + self.cardWidth
 
         pygame.display.update()
 
@@ -482,38 +571,38 @@ class Game():
     def startingAssets(self):
 
         ## Displays all starting assets
-        screen.blit(assets.back, (0, 0))
-        screen.blit(assets.table, (150, 150))
+        screen.blit(assets.back, self.backLoc)
+        screen.blit(assets.table, self.tableLoc)
 
-        screen.blit(assets.userButton, (723, 600)) # Bet button image
-        screen.blit(assets.userButton, (723, 660)) # Call button image
-        screen.blit(assets.userButton, (833, 600)) # Fold button image
-        screen.blit(assets.betButtonText,(726, 610)) # Bet button text
-        screen.blit(assets.callButtonText,(726, 670)) # Call button text
-        screen.blit(assets.foldButtonText,(838, 610)) # Fold button text
-        screen.blit(assets.upBet, (950, 600))
-        screen.blit(assets.downBet, (950, 660))
+        screen.blit(assets.userButton, (user.betButtonX1, user.betButtonY1)) # Bet button image
+        screen.blit(assets.userButton, (user.betButtonX1, user.callButtonY1)) # Call button image
+        screen.blit(assets.userButton, (user.foldButtonX1, user.betButtonY1)) # Fold button image
+        screen.blit(assets.betButtonText, (user.betButtonTextX, user.betButtonTextY)) # Bet button text
+        screen.blit(assets.callButtonText, (user.betButtonTextX, user.callButtonTextY)) # Call button text
+        screen.blit(assets.foldButtonText, (user.foldButtonTextX, user.betButtonTextY)) # Fold button text
+        screen.blit(assets.upBet, (user.increaseBetX1, user.betButtonY1))
+        screen.blit(assets.downBet, (user.increaseBetX1, user.callButtonY1))
         self.blankCards(all)
 
         self.updateUserChips() # refreshes all of the assets relating to user chips
         self.updateComputersChips() # ^^ but for the computer
         self.updatePot() # ^^ but for the pot box in the top middle of table
 
-        screen.blit(help.backPage, (30, 620)) # the back button bottom left
-        screen.blit(assets.backButtonText, (65, 625)) # the text in ^^
+        screen.blit(help.backPage, self.backButLoc) # the back button bottom left
+        screen.blit(assets.backButtonText, self.backButTextLoc) # the text in ^^
 
         pygame.display.update() # updates the display
 
     def displayCards(self, z):
         for each in self.remainingList:
-            if each == 10 :
+            if each == 10:
                 pass
             else:
                 self.currentPlayer = self.remainingPlayers[self.remainingList[each]]
                 self.currentPlayerX = self.remainingPlayers[self.remainingList[each]][2]
                 self.currentPlayerY = self.remainingPlayers[self.remainingList[each]][3]
                 if z == 1:
-                    self.currentPlayerX = self.currentPlayerX + 75
+                    self.currentPlayerX = self.currentPlayerX + self.cardWidth
                 self.Card = pygame.image.load(self.currentPlayer[1].Cards[z][2])
                 self.Card = pygame.transform.scale(self.Card, assets.cardScale)
                 screen.blit(self.Card, (self.currentPlayerX, self.currentPlayerY))
@@ -541,7 +630,7 @@ class Game():
         self.remainingList = list(self.remainingPlayers)
         self.dealerButtonLocation = random.randint(0, 3)
         if self.dealerButtonLocation == 3:
-            self.dealerButtonLocation == -1
+            self.dealerButtonLocation = -1
 
     def playGame(self):
         while user.Chips > 0:
@@ -554,7 +643,7 @@ class Game():
                 self.displayCards(z)
             self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
 
-            for x in range (4): # 4 is the number of stages (pre,  flop, turn, river)
+            for stage in self.stageList: # 4 is the number of stages (pre,  flop, turn, river)
                 self.moveList = ["", "", "", ""]
                 for z in range(4 - self.remainingList.count(10)): # goes through each player still available
                     while self.betsEqual == False:
@@ -577,7 +666,7 @@ class Game():
                         # print("test", self.remainingList[self.playerTurn])
                         if self.remainingList[self.playerTurn] != 10:
                             self.thisPlayer = self.remainingPlayers[self.remainingList[self.playerTurn]][1]
-                            self.thisPlayer.nextTurn()
+                            self.thisPlayer.nextTurn(stage)
                         self.updateUserChips()
                         self.updateComputersChips()
                         #if self.thisPlayer.isFolded == True and self.thisPlayer.foldThisTurn == False or self.thisPlayer.isFolded == False:
@@ -643,37 +732,37 @@ class Game():
 
     def updatePot(self):
         assets.generateNumber()
-        screen.blit(assets.computerBetBox, (557.5, 246))
-        screen.blit(assets.potText, (562.5, 251))
+        screen.blit(assets.computerBetBox, self.potBoxLoc)
+        screen.blit(assets.potText, self.potTextLoc)
         pygame.display.update()
 
     def updateComputersChips(self): # refreshes all of the computer related chip assets
         assets.generateNumber()
-        screen.blit(assets.computerBetBox, (310.5, 178))
-        screen.blit(assets.computerBetBox, (557, 178))
-        screen.blit(assets.computerBetBox, (803.5, 178))
-        screen.blit(assets.chipsBack, (self.comp1X, 123))
-        screen.blit(assets.chipsBack, (self.playerCardsX, 123))
-        screen.blit(assets.chipsBack, (self.comp3X, 123))
-        screen.blit(assets.computer1ChipsText, (334, 119))
-        screen.blit(assets.computer2ChipsText, (581, 119))
-        screen.blit(assets.computer3ChipsText, (824, 119))
-        screen.blit(assets.computer1BetText, (315.5, 183))
-        screen.blit(assets.computer2BetText, (562, 183))
-        screen.blit(assets.computer3BetText, (808.5, 183))
+        screen.blit(assets.computerBetBox, user.compBetBoxLoc)
+        screen.blit(assets.computerBetBox, user.comp2BetBoxLoc)
+        screen.blit(assets.computerBetBox, self.comp3BetBoxLoc)
+        screen.blit(assets.chipsBack, (self.comp1X, self.chipsBackY))
+        screen.blit(assets.chipsBack, (self.playerCardsX, self.chipsBackY))
+        screen.blit(assets.chipsBack, (self.comp3X, self.chipsBackY))
+        screen.blit(assets.computer1ChipsText, self.comp1ChipsTextLoc)
+        screen.blit(assets.computer2ChipsText, self.comp2ChipsTextLoc)
+        screen.blit(assets.computer3ChipsText, self.comp3ChipsTextLoc)
+        screen.blit(assets.computer1BetText, self.comp1BetTextLoc)
+        screen.blit(assets.computer2BetText, self.comp2BetTextLoc)
+        screen.blit(assets.computer3BetText, self.comp3BetTextLoc)
         pygame.display.update()
 
     def updateUserChips(self): # updates all of the user chip assets
         assets.generateNumber()
-        pygame.draw.rect(screen, Colours._lightGrey, (445, 600, 105, 80), 0) # User total chips background (left)
-        pygame.draw.rect(screen, Colours._lightGrey, (1015, 635, 80, 40), 0) # User bet increase background (bottom right)
-        screen.blit(assets.computerBetBox, (557.5, 485)) # The background for the bet box, lower central table
+        pygame.draw.rect(screen, Colours._lightGrey, self.userChipsRectLoc, 0) # User total chips background (left)
+        pygame.draw.rect(screen, Colours._lightGrey, (user.betCoverX, user.betCoverY, user.betCoverWidth, user.betCoverHeight), 0) # User bet increase background (bottom right)
+        screen.blit(assets.computerBetBox, self.userBetBoxLoc) # The background for the bet box, lower central table
 
-        screen.blit(assets.chipsText, (450, 610)) # "Chips:" user left
-        screen.blit(assets.userBetText, (562.5, 490)) # "Bet: " bottom middle table 58 x 37
+        screen.blit(assets.chipsText, (user.chipsTextX, user.betButtonTextY)) # "Chips:" user left
+        screen.blit(assets.userBetText, self.userBetTextLoc) # "Bet: " bottom middle table 58 x 37
 
-        screen.blit(assets.userIncreaseText, (1020, 640)) # User bet increase text bottom right
-        screen.blit(assets.userChipsText, (450, 640)) # User chips value text left
+        screen.blit(assets.userIncreaseText, (user.betTextPos, user.chipsCoverY)) # User bet increase text bottom right
+        screen.blit(assets.userChipsText, (user.chipsTextX, user.chipsCoverY)) # User chips value text left
 
         pygame.display.update()
 
@@ -687,7 +776,7 @@ class Game():
         if self.remainingList[self.tempLocation] == 10:
             self.tempLocation = self.tempLocation + 1
 
-        self.smallBlinder = self.remainingPlayers[self.remainingList[self.tempLocation]][1]
+        self.smallBlinder = self.remainingPlayers[self.remainingList[self.tempLocation]]
         if self.tempLocation + 1 == (len(self.remainingList) + 1):
             self.tempLocation = 0
         else:
@@ -699,9 +788,9 @@ class Game():
             self.tempLocation = self.tempLocation + 1
 
 
-        self.bigBlinder = self.remainingPlayers[self.remainingList[self.tempLocation + 1]][1]
-        self.smallBlindFunction(self.smallBlinder)
-        self.bigBlindFunction(self.bigBlinder)
+        self.bigBlinder = self.remainingPlayers[self.remainingList[self.tempLocation + 1]]
+        self.smallBlindFunction(self.smallBlinder[1])
+        self.bigBlindFunction(self.bigBlinder[1])
         self.updateUserChips()
         self.updateComputersChips()
         index = self.tempLocation + 2
@@ -754,21 +843,22 @@ class Game():
         self.bigBlind = 100 # the number of chips bet after the small blind
         self.smallBlind = 50 # the number of chips bet after the small blind
         self.playerTurn = 0 # determines which players turn it is starts at 0
-        self.playerValue = [0, 0, 0, 0] # list of the different hadn values for the players
+        self.playerValue = [0, 0, 0, 0] # list of the different hand values for the players
         self.previousBet = 0 # the bet of the player before so that the the next player can call
         self.allPlayers = {0: [0, user, self.playerCardsX, 600], 1: [1, computer1, self.comp1X, 10], 2: [2, computer2, self.playerCardsX, 10], 3: [3, computer3, self.comp3X, 10]}
         self.remainingPlayers = {}
         self.stage = 1 # 0 = pre 1 = flop 2 = turn 3 = river
         self.betsEqual = False
         self.currentRiverDisplayed = []
+        self.stageList = ["pre-flop", "flop", "turn", "river"]
 
         self.constructRemainingPlayers()
         cards.getCardList() # gets all cards
         dealer.getDealerCards() # puts the list into a new temp list
 
     def lose(self): # WIP
-        screen.blit(assets.back, (0, 0))
-        screen.blit(assets.youLose, (100, 100))
+        screen.blit(assets.back, self.backLoc)
+        screen.blit(assets.youLose, self.loseLoc)
         pygame.display.update()
 
     def displayFlop(self): # displays the first 3 cards (flop) from the river
@@ -777,15 +867,15 @@ class Game():
                 self.flopCards = pygame.image.load(river.riverCards[i][2])
                 self.flopCards = pygame.transform.scale(self.flopCards, assets.cardScale)
                 self.currentRiverDisplayed.append(river.riverCards[i])
-                screen.blit(self.flopCards, (self.flopX, 306))
-                self.flopX = self.flopX - 125
+                screen.blit(self.flopCards, (self.flopX, self.flopY))
+                self.flopX = self.flopX - self.flopDiff
                 time.sleep(0.5)
                 pygame.display.update()
 
     def displayTurn(self): # displays the fourth card in the river (turn)
         self.turnCard = pygame.image.load(river.riverCards[3][2])
         self.turnCard = pygame.transform.scale(self.turnCard, assets.cardScale)
-        screen.blit(self.turnCard, (475, 306))
+        screen.blit(self.turnCard, self.turnLoc)
         self.currentRiverDisplayed.append(river.riverCards[3])
         time.sleep(0.5)
         pygame.display.update()
@@ -793,7 +883,7 @@ class Game():
     def displayRiver(self): # displays the final card (river)
         self.riverCard = pygame.image.load(river.riverCards[4][2])
         self.riverCard = pygame.transform.scale(self.riverCard, assets.cardScale)
-        screen.blit(self.riverCard, (350, 306))
+        screen.blit(self.riverCard, self.riverLoc)
         self.currentRiverDisplayed.append(river.riverCards[4])
         time.sleep(0.5)
         pygame.display.update()
@@ -923,7 +1013,9 @@ class Game():
 
 class Help():
     def __init__(self):
-        self.back = pygame.transform.scale(assets.back, (1280, 720))
+        self.backScale = (1280, 720)
+        self.nextButLoc = (175, 75)
+        self.back = pygame.transform.scale(assets.back, self.backScale)
 
         self.helpPage1 = assets.helpFont.render("How to play", True, Colours._white)  # 249 x 45
         self.helpPage2 = assets.helpFont.render("How to win", True, Colours._white)  # 235 x 45
@@ -965,9 +1057,9 @@ class Help():
         self.help23 = assets.inGameFont.render("Straight Flush:", True, Colours._white)
         self.help24 = assets.inGameFont.render("Royal Flush:", True, Colours._white)
 
-        self.nextPage = pygame.transform.scale(assets.menuButton, (175, 75))
+        self.nextPage = pygame.transform.scale(assets.menuButton, self.nextButLoc)
         self.backPage = self.nextPage
-        self.nextPagePress = pygame.transform.scale(assets.menuButtonPress, (175, 75))
+        self.nextPagePress = pygame.transform.scale(assets.menuButtonPress, self.nextButLoc)
         self.backPagePress = self.nextPagePress
 
     def page1(self):
@@ -999,7 +1091,7 @@ class Help():
                     if pygame.mouse.get_pos()[0] >= 1075 and pygame.mouse.get_pos()[1] >= 620:
                         if pygame.mouse.get_pos()[0] <= 1250 and pygame.mouse.get_pos()[1] <= 695:
                             screen.blit(self.nextPagePress, (1075, 620))
-                            screen.blit(assets.nextButtonText, (1110, 635))
+                            screen.blit(assets.nextButtonText, (1110, user.betCoverY))
                             pygame.display.update()
                             time.sleep(0.1)
                             self.page2()
@@ -1007,7 +1099,7 @@ class Help():
                     if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
                         if pygame.mouse.get_pos()[0] <= 205 and pygame.mouse.get_pos()[1] <= 695:
                             screen.blit(self.backPagePress, (30, 620))
-                            screen.blit(assets.backButtonText, (65, 635))
+                            screen.blit(assets.backButtonText, (65, user.betCoverY))
                             pygame.display.update()
                             time.sleep(0.1)
                             menu.displayMenu()
@@ -1037,7 +1129,7 @@ class Help():
                     if pygame.mouse.get_pos()[0] >= 1075 and pygame.mouse.get_pos()[1] >= 620:
                         if pygame.mouse.get_pos()[0] <= 1250 and pygame.mouse.get_pos()[1] <= 695:
                             screen.blit(self.nextPagePress, (1075, 620))
-                            screen.blit(assets.nextButtonText, (1110, 635))
+                            screen.blit(assets.nextButtonText, (1110, user.betCoverY))
                             pygame.display.update()
                             time.sleep(0.1)
                             self.page3()
@@ -1045,7 +1137,7 @@ class Help():
                     if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
                         if pygame.mouse.get_pos()[0] <= 205 and pygame.mouse.get_pos()[1] <= 695:
                             screen.blit(self.backPagePress, (30, 620))
-                            screen.blit(assets.backButtonText, (65, 635))
+                            screen.blit(assets.backButtonText, (65, user.betCoverY))
                             pygame.display.update()
                             time.sleep(0.1)
                             self.page1()
@@ -1058,13 +1150,13 @@ class Help():
         screen.blit(assets.backButtonText, (65, 625))
 
         screen.blit(self.help16, (10, 80))
-        screen.blit(self.help17, (640, 80))
+        screen.blit(self.help17, (user.chipsCoverY, 80))
         screen.blit(self.help18, (10, 188))
-        screen.blit(self.help19, (640, 188))
+        screen.blit(self.help19, (user.chipsCoverY, 188))
         screen.blit(self.help20, (10, 294))
-        screen.blit(self.help21, (640, 294))
+        screen.blit(self.help21, (user.chipsCoverY, 294))
         screen.blit(self.help22, (10, 400))
-        screen.blit(self.help23, (640, 400))
+        screen.blit(self.help23, (user.chipsCoverY, 400))
         screen.blit(self.help24, (10, 506))
 
         self.pair1 = pygame.image.load("C2.JPG")
@@ -1157,7 +1249,7 @@ class Help():
                     if pygame.mouse.get_pos()[0] >= 30 and pygame.mouse.get_pos()[1] >= 620:
                         if pygame.mouse.get_pos()[0] <= 205 and pygame.mouse.get_pos()[1] <= 695:
                             screen.blit(self.backPagePress, (30, 620))
-                            screen.blit(assets.backButtonText, (65, 635))
+                            screen.blit(assets.backButtonText, (65, user.betCoverY))
                             pygame.display.update()
                             time.sleep(0.1)
                             self.page2()
@@ -1252,3 +1344,5 @@ if __name__ == "__main__":
 #Yeet after 0 chips
 #Magic numbers
 #Objectives: Use algorithms
+#Psuedo code
+#sbaker@moulshamhigh.org

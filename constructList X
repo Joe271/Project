@@ -1,0 +1,11 @@
+decisionGraph = {}
+pairs = ["HighPairs", "MediumPairs", "LowPairs", "StongAces", "MiddleAces", "LowSuitedAces", "SuitedPictures", "OffSuitedPictures", "SuitedConnectors"]
+opAction = ["Fold", "Call", "Raise"]
+tablePosition = ["Early", "Middle", "Late", "SmallBLind"]
+whatDo = ["Bet", "Call", "Fold"]
+
+def constructList(pairs, opAction, tablePosition, whatDo, decisionGraph):
+    pass
+
+# "currentPlayer" : ["HighPairs", "MediumPairs", "LowPairs", "StongAces", "MiddleAces", "LowSuitedAces", "SuitedPictures", "OffSuitedPictures", "SuitedConnectors"],
+# "HighPairs"

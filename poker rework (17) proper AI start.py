@@ -77,7 +77,7 @@ class User(Player):
             dealer.dealerCards.pop(pick) # removes this selected card from the dealer list so 2 players can not have the same cards
             game.cardCounter = game.cardCounter - 1 # reduces the counter by the number of cards chosen so there are no index errors
 
-    def nextTurn(self):
+    def nextTurn(self, stage):
         if self.isFolded == True or self.Chips == 0:
             self.foldThisTurn = False
             return
@@ -238,7 +238,17 @@ class Computer(Player):
             game.cardCounter = game.cardCounter - 1
             self.Cards[i][2] = "BackOfCard.JPG"
 
-    def nextTurn(self): # the next turn for the computer is determined
+    def getTablePosition(self):
+        if game.bigBlinder[0] == self.locPos - 1:
+            self.tablePosition = "Early"
+
+        elif game.bigBlinder[0] == self.locPos + 2 or game.bigBlinder[0] == self.locPos - 2:
+            self.tablePosition = "Middle"
+
+        elif game.bigBlinder[0] == self.locPos - 3 or game.bigBlinder[0] == self.locPos + 1:
+            self.tablePosition = "Late"
+
+    def nextTurn(self, stage): # the next turn for the computer is determined
         #time.sleep(1)
         self.getCurrentScore()
         self.getMaxBets()
@@ -248,15 +258,27 @@ class Computer(Player):
             return
 
         elif self.isFolded == False:
-            if game.previousBet + 200 < self.maxBet:
-                self.computerBet()
-            elif game.previousBet + 200 > self.maxBet:
-                self.call()
-            else:
-                self.fold()
+            if stage == "pre-flop":
+                self.playPreFlop()
+
+            elif stage == "flop":
+                self.playFlop()
+
+            elif stage == "turn":
+                self.playRiver()
+
+            elif stage == "river":
+                self.playRiver()
 
         if self.bet != 0:
-             game.previousBet = self.bet
+            game.previousBet = self.bet
+
+    def playPreFlop(self):
+        if self.currentScore == 1:
+            if self.Cards[0][0] in range(11, 14):
+                self.computerBet()
+            elif self.Cards[0][0] in range(9, 11):
+                pass
 
     def getMaxBets(self):
         if game.playerValue[self.locPos] <= 1:
@@ -280,6 +302,7 @@ class Computer(Player):
             for x in range(len(game.currentRiverDisplayed)):
                 self.currentHand.append(game.currentRiverDisplayed[x])
         game.getHandValue(self.currentHand, self.locPos)
+        self.currentScore = game.playerValue[self.locPos]
         return
 
     def fold(self):
@@ -554,10 +577,12 @@ class Game():
                 self.displayCards(z)
             self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
 
-            for x in range (4): # 4 is the number of stages (pre,  flop, turn, river)
+            for stage in self.stageList: # 4 is the number of stages (pre,  flop, turn, river)
                 self.moveList = ["", "", "", ""]
                 for z in range(4 - self.remainingList.count(10)): # goes through each player still available
                     while self.betsEqual == False:
+
+
                         if self.remainingList.count(10) == 3: # if there is only one palyer left not folded
                             self.foldWinnerIndex = [i for i, x in enumerate(self.remainingList) if x != 10]
                             self.foldWinner = self.remainingPlayers[self.foldWinnerIndex[0]][1]
@@ -577,7 +602,7 @@ class Game():
                         # print("test", self.remainingList[self.playerTurn])
                         if self.remainingList[self.playerTurn] != 10:
                             self.thisPlayer = self.remainingPlayers[self.remainingList[self.playerTurn]][1]
-                            self.thisPlayer.nextTurn()
+                            self.thisPlayer.nextTurn(stage)
                         self.updateUserChips()
                         self.updateComputersChips()
                         #if self.thisPlayer.isFolded == True and self.thisPlayer.foldThisTurn == False or self.thisPlayer.isFolded == False:
@@ -687,7 +712,7 @@ class Game():
         if self.remainingList[self.tempLocation] == 10:
             self.tempLocation = self.tempLocation + 1
 
-        self.smallBlinder = self.remainingPlayers[self.remainingList[self.tempLocation]][1]
+        self.smallBlinder = self.remainingPlayers[self.remainingList[self.tempLocation]]
         if self.tempLocation + 1 == (len(self.remainingList) + 1):
             self.tempLocation = 0
         else:
@@ -699,9 +724,9 @@ class Game():
             self.tempLocation = self.tempLocation + 1
 
 
-        self.bigBlinder = self.remainingPlayers[self.remainingList[self.tempLocation + 1]][1]
-        self.smallBlindFunction(self.smallBlinder)
-        self.bigBlindFunction(self.bigBlinder)
+        self.bigBlinder = self.remainingPlayers[self.remainingList[self.tempLocation + 1]]
+        self.smallBlindFunction(self.smallBlinder[1])
+        self.bigBlindFunction(self.bigBlinder[1])
         self.updateUserChips()
         self.updateComputersChips()
         index = self.tempLocation + 2
@@ -754,13 +779,14 @@ class Game():
         self.bigBlind = 100 # the number of chips bet after the small blind
         self.smallBlind = 50 # the number of chips bet after the small blind
         self.playerTurn = 0 # determines which players turn it is starts at 0
-        self.playerValue = [0, 0, 0, 0] # list of the different hadn values for the players
+        self.playerValue = [0, 0, 0, 0] # list of the different hand values for the players
         self.previousBet = 0 # the bet of the player before so that the the next player can call
         self.allPlayers = {0: [0, user, self.playerCardsX, 600], 1: [1, computer1, self.comp1X, 10], 2: [2, computer2, self.playerCardsX, 10], 3: [3, computer3, self.comp3X, 10]}
         self.remainingPlayers = {}
         self.stage = 1 # 0 = pre 1 = flop 2 = turn 3 = river
         self.betsEqual = False
         self.currentRiverDisplayed = []
+        self.stageList = ["pre-flop", "flop", "turn", "river"]
 
         self.constructRemainingPlayers()
         cards.getCardList() # gets all cards
@@ -1252,3 +1278,5 @@ if __name__ == "__main__":
 #Yeet after 0 chips
 #Magic numbers
 #Objectives: Use algorithms
+#Psuedo code
+#sbaker@moulshamhigh.org

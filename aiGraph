@@ -1,0 +1,36 @@
+## AI hand graph
+opener = {
+    "Root": ["HighPair", "MediumPair", "LowPair", "StrongAces", "MiddleAces", "LowSuitedAces", "OffSuitedPic", "SuitedConnectors"],
+    "HighPair": ["OFold", "OCall", "OBet"], # Hands
+    "MediumPair": ["OFold", "OCall", "OBet"],
+    "LowPair": ["OFold", "OCall", "OBet"],
+    "StrongAces": ["OFold", "OCall", "OBet"],
+    "MiddleAces": ["OFold", "OCall", "OBet"],
+    "LowSuitedAces": ["OFold", "OCall", "OBet"],
+    "OffSuitedPic": ["OFold", "OCall", "OBet"],
+    "SuitedConnectors": ["OFold", "OCall", "OBet"],
+    "OFold": ["Early", "Middle", "Small Blind"], # Opponetns action
+    "OCall": ["Early", "Middle", "Small Blind"],
+    "OBet": ["Early", "Middle", "Small Blind"],
+    "Early": ["SBet", "SCall", "SFold"], # Table Pos
+    "Middle": ["SBet", "SCall", "SFold"],
+    "Small Blind": ["SBet", "SCall", "SFold"],
+    "SBet": [],
+    "SCall": [],
+    "SFold": []
+}
+
+def bfs(opener, vertex):
+    visited = []
+    queue = [vertex]
+    while queue:
+        currentNode = queue.pop(0)
+        if currentNode not in visited:
+            visited.append(currentNode)
+            neighbours = opener[currentNode]
+            for neigbour in neighbours:
+                queue.append(neigbour)
+    return visited
+
+visitedList = bfs(opener, "Root")
+print(visitedList)
