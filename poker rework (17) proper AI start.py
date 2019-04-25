@@ -258,17 +258,7 @@ class Computer(Player):
             return
 
         elif self.isFolded == False:
-            if stage == "pre-flop":
-                self.playPreFlop()
-
-            elif stage == "flop":
-                self.playFlop()
-
-            elif stage == "turn":
-                self.playRiver()
-
-            elif stage == "river":
-                self.playRiver()
+            self.fold()
 
         if self.bet != 0:
             game.previousBet = self.bet

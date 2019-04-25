@@ -225,7 +225,7 @@ class User(Player):
                             screen.blit(assets.computerBetBox, self.computerBetBoxPos)
                             # self.betBox = pygame.draw.rect(screen, Colours.lightGrey, (557.5, 485, 165, 40))
                             self.betText = assets.inGameFont.render("Bet: " + str(user.bet), True, (Colours._black))
-                            screen.blit(self.betText, (self.betTextPos)
+                            screen.blit(self.betText, (self.betTextPos))
                             pygame.draw.rect(screen, Colours._lightGrey, (self.betCoverX, self.betCoverY, self.betCoverWidth, self.betCoverHeight), 0)
                             self.userIncreaseText = assets.inGameFont.render(str(self.increaseBet), True, Colours._black)
                             screen.blit(self.userIncreaseText, (self.betTextPos, self.chipsCoverY))
@@ -738,7 +738,7 @@ class Game():
 
     def updateComputersChips(self): # refreshes all of the computer related chip assets
         assets.generateNumber()
-        screen.blit(assets.computerBetBox, self.compBetBoxLoc)
+        screen.blit(assets.computerBetBox, user.compBetBoxLoc)
         screen.blit(assets.computerBetBox, self.comp2BetBoxLoc)
         screen.blit(assets.computerBetBox, self.comp3BetBoxLoc)
         screen.blit(assets.chipsBack, (self.comp1X, self.chipsBackY))
@@ -758,10 +758,10 @@ class Game():
         pygame.draw.rect(screen, Colours._lightGrey, (user.betCoverX, user.betCoverY, user.betCoverWidth, user.betCoverHeight), 0) # User bet increase background (bottom right)
         screen.blit(assets.computerBetBox, self.userBetBoxLoc) # The background for the bet box, lower central table
 
-        screen.blit(assets.chipsText, (self.chipsTextX, self.betButtonTextY)) # "Chips:" user left
+        screen.blit(assets.chipsText, (user.chipsTextX, user.betButtonTextY)) # "Chips:" user left
         screen.blit(assets.userBetText, self.userBetTextLoc) # "Bet: " bottom middle table 58 x 37
 
-        screen.blit(assets.userIncreaseText, (user.betTextPos, user.chipsCoverY)) # User bet increase text bottom right
+        screen.blit(assets.userIncreaseText, user.betTextPos) # User bet increase text bottom right
         screen.blit(assets.userChipsText, (user.chipsTextX, user.chipsCoverY)) # User chips value text left
 
         pygame.display.update()

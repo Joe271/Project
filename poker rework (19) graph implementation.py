@@ -72,7 +72,6 @@ class Player():
         self.Cards = ["", ""] # the standard list for the 2 cards a player has
         self.Chips = 5000 # the starting amount of chips for a player
         self.bet = 0 # all bets start at 0
-        self.score = 0 # ?
         self.isFolded = False
         self.foldThisTurn = False
         self.handValue = 0 # this is the rank of hand i.e. high card = 1 royal flush = 10
@@ -145,10 +144,10 @@ class User(Player):
                                 game.moveList[self.locPos] = "bet"
                                 return
 
-                        elif pygame.mouse.get_pos()[0] >= self.betButtonX1 and pygame.mouse.get_pos()[1] >= self.callButtonY1:  # Call button
+                        if pygame.mouse.get_pos()[0] >= self.betButtonX1 and pygame.mouse.get_pos()[1] >= self.callButtonY1:  # Call button
                             if pygame.mouse.get_pos()[0] <= self.callButtonX1 and pygame.mouse.get_pos()[1] <= self.callButtonY2:
-                                screen.blit(assets.gamePress, (self.betButtonX1, self.callButtonY))
-                                screen.blit(assets.callButtonText, (self.callButtonY2, self.callButtonTextY))
+                                screen.blit(assets.gamePress, (self.betButtonX1, self.callButtonY1))
+                                screen.blit(assets.callButtonText, (self.betButtonTextX, self.callButtonTextY))
                                 pygame.display.update()
                                 time.sleep(0.2)
                                 screen.blit(assets.userButton, (self.betButtonX1, self.callButtonY1))
@@ -159,7 +158,7 @@ class User(Player):
                                 return
                                 # this button will allow the user to match the previous bet as this is the minimum they have to bet without folding
 
-                        elif pygame.mouse.get_pos()[0] >= self.foldButtonX1 and pygame.mouse.get_pos()[1] >= self.betButtonY1: # Fold button
+                        if pygame.mouse.get_pos()[0] >= self.foldButtonX1 and pygame.mouse.get_pos()[1] >= self.betButtonY1: # Fold button
                             if pygame.mouse.get_pos()[0] <= self.foldButtonX2 and pygame.mouse.get_pos()[1] <= self.betButtonY2:
                                 screen.blit(assets.gamePress, (self.foldButtonX1, self.betButtonY1))
                                 screen.blit(assets.foldButtonText, (self.foldButtonTextX, self.betButtonTextY))
@@ -228,7 +227,7 @@ class User(Player):
                             screen.blit(self.betText, (self.betTextPos))
                             pygame.draw.rect(screen, Colours._lightGrey, (self.betCoverX, self.betCoverY, self.betCoverWidth, self.betCoverHeight), 0)
                             self.userIncreaseText = assets.inGameFont.render(str(self.increaseBet), True, Colours._black)
-                            screen.blit(self.userIncreaseText, (self.betTextPos, self.chipsCoverY))
+                            screen.blit(self.userIncreaseText, self.betTextPos)
                             pygame.display.update()
                             self.betting = False
                             # if the user clicks the number to increase this amount will be added to their bet and then the next player will have their turn
@@ -269,6 +268,162 @@ class Computer(Player):
         self.currentBet = 0 # the amount they currently have in their bet
         self.minBet = 50
         self.locPos = locPos
+        self.suitList = []
+        self.valueList = []
+
+    def currentGraphFun(self):
+        self.currentGraph = {
+        # Each hand value: high card -> royal flush
+        "Root": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        # What the previous player does
+        1: ["1Fold", "1Bet", "1Call"],
+        2: ["2Fold", "2Bet", "2Call"],
+        3: ["3Fold", "3Bet", "3Call"],
+        4: ["4Fold", "4Bet", "4Call"],
+        5: ["5Fold", "5Bet", "5Call"],
+        6: ["6Fold", "6Bet", "6Call"],
+        7: ["7Fold", "7Bet", "7Call"],
+        8: ["8Fold", "8Bet", "8Call"],
+        9: ["9Fold", "9Bet", "9Call"],
+        10: ["10Fold", "10Bet", "10Call"],
+        # What to do
+        "1Bet": [self.fold()],
+        "1Call": [self.fold()],
+        "1Fold": [self.fold()],
+        "2Bet": [self.fold()],
+        "2Call": [self.fold()],
+        "2Fold": [self.fold()],
+        "3Bet": [self.fold()],
+        "3Call": [self.fold()],
+
+        "2Fold": [self.call()],
+        "3Fold": [self.call()],
+        "4Fold": [self.call()],
+        "4Call": [self.call()],
+        "4Bet": [self.call()],
+        "5Call": [self.call()],
+        "5Fold": [self.call()],
+        "5Bet": [self.call()],
+        "6Bet": [self.call()],
+        "7Bet": [self.call()],
+        "8Bet": [self.call()],
+
+        "6Call": [self.computerBet()],
+        "6Fold": [self.computerBet()],
+        "7Call": [self.computerBet()],
+        "7Fold": [self.computerBet()],
+        "8Fold": [self.computerBet()],
+        "9Bet": [self.computerBet()],
+        "9Call": [self.computerBet()],
+        "9Fold": [self.computerBet()],
+        "10Bet": [self.computerBet()],
+        "10Call": [self.computerBet()],
+        "10Fold": [self.computerBet()],
+
+        self.computerBet(): [],
+        self.call(): [],
+        self.fold(): []
+        }
+
+    def potentialGraphFun(self):
+        self.potentialGraph = {
+        "Root": [0, 1, 2, 3, 4, 5]
+        0: ["0Fold", "0Bet", "0Call"],
+        1: ["1Fold", "1Bet", "1Call"],
+        2: ["2Fold", "2Bet", "2Call"],
+        3: ["3Fold", "3Bet", "3Call"],
+        4: ["4Fold", "4Bet", "4Call"],
+        5: ["5Fold", "5Bet", "5Call"],
+        6: ["6Fold", "6Bet", "6Call"],
+
+        "0Bet": [self.fold()],
+        "0Call": [self.fold()],
+        "1Bet": [self.fold()],
+        "2Bet": [self.fold()],
+
+        "0Fold": [self.call()],
+        "1Call": [self.call()],
+        "1Fold": [self.call()],
+        "2Call": [self.call()],
+        "3Bet": [self.call()],
+        "3Call": [self.call()],
+        "3Fold": [self.call()],
+        "4Bet": [self.call()],
+        "4Call": [self.call()],
+        "5Bet": [self.call()],
+
+        "2Fold": [self.computerBet()],
+        "4Fold": [self.computerBet()],
+        "5Call": [self.computerBet()],
+        "5Fold": [self.computerBet()],
+        "6Bet": [self.computerBet()],
+        "6Call": [self.computerBet()],
+        "6Fold": [self.computerBet()],
+
+        self.computerBet(): [],
+        self.call(): [],
+        self.fold(): []
+        }
+
+    def getPotentialScore(self, stage, currentRiverDisplayed):
+        self.currentHand = self.Cards
+        self.suitList.append(self.currentHand[0][1])
+        self.suitList.append(self.currentHand[1][1])
+        self.valueList.append(self.currentHand[0][0])
+        self.valueList.append(self.currentHand[1][0])
+        for x in range(len(game.currentRiverDisplayed)):
+            self.currentHand.append(game.currentRiverDisplayed[x])
+            self.suitList.append(game.currentRiverDisplayed[x][1])
+            self.valueList.append(game.currentRiverDisplayed[x][0])
+
+        game.sortValues(self.valueList)
+        self.isWeakDraw()
+        self.isMarginalMade()
+        self.isStrongDraw()
+        self.isVeryStrongDraw()
+        self.isStrongMade()
+        self.isMonster()
+
+        self.suitList = []
+        self.valueList = []
+        self.currentHand = []
+
+    def isMonster(self):
+        if self.currentScore > 2:
+            self.potentialValue = 5
+
+    def isStrongMade(self):
+        if self.currentScore == 2 and game.pairNumber[self.locPos] >= cards.nineValue:
+            self.potentialValue = 3
+
+    def isMarginalMade(self):
+        if self.currentScore == 2 and game.pairNumber[self.locPos] < cards.nineValue:
+            self.potentialValue = 2
+
+    def isVeryStrongDraw(self):
+        if self.suitList.count("C") == 4 or self.suitList.count("D") == 4 or self.suitList.count("H") == 4 or self.suitList.count("S") == 4:
+            self.potentialValue = 4
+            for i in range(len(self.valueList)):
+                if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1 and self.valueList[i-2] - self.valueList[i-3] == 1:
+                    self.potentialValue = 5
+
+    def isStrongDraw(self):
+        for i in range(len(self.valueList)):
+            if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1 and self.valueList[i-2] - self.valueList[i-3] == 1:
+                self.potentialValue = 4
+
+        if self.suitList.count("C") == 3 or self.suitList.count("D") == 3 or self.suitList.count("H") == 3 or self.suitList.count("S") == 3:
+            for x in range(len(self.valueList)):
+                if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1:
+                    self.potentialValue = 4
+
+    def isWeakDraw(self):
+        if self.suitList.count("C") == 3 or self.suitList.count("D") == 3 or self.suitList.count("H") == 3 or self.suitList.count("S") == 3:
+            self.potentialValue = 1
+
+        for x in range(len(self.valueList)):
+            if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1:
+                self.potentialValue = 1
 
     def getCards(self):
         self.isFolded = False
@@ -287,39 +442,47 @@ class Computer(Player):
             self.tablePosition = "Middle"
 
         elif game.bigBlinder[0] == self.locPos - 3 or game.bigBlinder[0] == self.locPos + 1:
-            self.tablePosition = "Late"
+            self.tablePosition = "Small Blind"
 
     def nextTurn(self, stage): # the next turn for the computer is determined
-        #time.sleep(1)
+        time.sleep(1)
         self.getCurrentScore()
+        self.getPotentialScore(game.stage, game.currentRiverDisplayed)
         self.getMaxBets()
-        #pdb.set_trace()
+        self.currentGraphFun()
+        self.currentInfoList = ["Root", self.currentScore, str(self.currentScore)+game.previousMove]
         if self.isFolded == True or self.Chips == 0:
             self.foldThisTurn = False
             return
 
         elif self.isFolded == False:
-            if stage == "pre-flop":
-                self.playPreFlop()
-
-            elif stage == "flop":
-                self.playFlop()
-
-            elif stage == "turn":
-                self.playRiver()
-
-            elif stage == "river":
-                self.playRiver()
+            if self.stage == 4:
+                self.computerSelection(self.currentGraph, "Root")
+            else:
+                self.computerSelection(self.potentialGraph, "Root")
 
         if self.bet != 0:
             game.previousBet = self.bet
 
-    def playPreFlop(self):
-        if self.currentScore == 1:
-            if self.Cards[0][0] in range(11, 14):
-                self.computerBet()
-            elif self.Cards[0][0] in range(9, 11):
-                pass
+    def computerSelection(self, Graph, vertex):
+        queue = [vertex]
+        moves = []
+        while queue:
+            currentNode = queue.pop(0)
+            if currentNode in self.currentInfoList:
+                moves.append(currentNode)
+                # try:
+                # pdb.set_trace()
+                print(Graph)
+                print(currentNode)
+                neighbours = Graph[currentNode]
+                for neigbour in neighbours:
+                    queue.append(neigbour)
+                    if len(moves) == 3 and neighbours == [self.call()] or neighbours == [self.fold()] or neighbours == [self.computerBet()]:
+                        moves.extend(neighbours)
+                # except:
+                #     print(currentNode)
+        return moves
 
     def getMaxBets(self):
         if game.playerValue[self.locPos] <= 1:
@@ -347,6 +510,7 @@ class Computer(Player):
         return
 
     def fold(self):
+        print(game.remainingPlayers[self.locPos][1])
         dealer.pot = dealer.pot + self.bet
         self.Cards = ["", ""]
         self.bet = 0
@@ -360,7 +524,7 @@ class Computer(Player):
         #game.remainingList.remove(self.locPos)
         game.remainingPlayers[self.locPos] = 10
         game.remainingList[self.locPos] = 10
-        game.moveList[self.locPos] = "fold"
+        game.previousMove = "fold"
 
     def call(self):
         if self.bet == game.previousBet:
@@ -383,7 +547,7 @@ class Computer(Player):
         if self.Chips < 0:
             self.bet = self.bet + (self.bet + self.Chips)
 
-        game.moveList[self.locPos] = "call"
+        game.previousMove = "call"
 
     def check(self): # will just pass to the next player or onto the next cards from the river
         return
@@ -408,7 +572,7 @@ class Computer(Player):
             game.remainingPlayers[self.locPos] = 10
             game.remainingList[self.locPos] = 10
 
-        game.moveList[self.locPos] = "bet"
+        game.previousMove = "bet"
 
 class River():
     def __init__(self):
@@ -526,6 +690,7 @@ class Game():
         self.flopDiff = 125
         self.turnLoc = (475, 306)
         self.riverLoc = (350, 306)
+        self.increaseTextLoc = (1024, 640)
         self.restart() # sets all variables to their original value at the start of the game
 
     def getCards(self): # calls all of the functions that gives the players cards
@@ -738,7 +903,7 @@ class Game():
 
     def updateComputersChips(self): # refreshes all of the computer related chip assets
         assets.generateNumber()
-        screen.blit(assets.computerBetBox, user.compBetBoxLoc)
+        screen.blit(assets.computerBetBox, self.comp1BetBoxLoc)
         screen.blit(assets.computerBetBox, self.comp2BetBoxLoc)
         screen.blit(assets.computerBetBox, self.comp3BetBoxLoc)
         screen.blit(assets.chipsBack, (self.comp1X, self.chipsBackY))
@@ -761,7 +926,7 @@ class Game():
         screen.blit(assets.chipsText, (user.chipsTextX, user.betButtonTextY)) # "Chips:" user left
         screen.blit(assets.userBetText, self.userBetTextLoc) # "Bet: " bottom middle table 58 x 37
 
-        screen.blit(assets.userIncreaseText, user.betTextPos) # User bet increase text bottom right
+        screen.blit(assets.userIncreaseText, self.increaseTextLoc) # User bet increase text bottom right
         screen.blit(assets.userChipsText, (user.chipsTextX, user.chipsCoverY)) # User chips value text left
 
         pygame.display.update()
@@ -808,6 +973,7 @@ class Game():
             self.playerTurn = self.remainingList.index(self.playerTurn) + 1
 
         self.previousBet = 100
+        self.previousMove = "call"
 
     def smallBlindFunction(self, smallBlindPlayer):
         smallBlindPlayer.bet = smallBlindPlayer.bet + self.smallBlind
@@ -851,6 +1017,9 @@ class Game():
         self.betsEqual = False
         self.currentRiverDisplayed = []
         self.stageList = ["pre-flop", "flop", "turn", "river"]
+        self.previousMove = ""
+        self.pairNumber = ["", "", "", ""]
+        self.twoPairNumber = ["", "", "", ""]
 
         self.constructRemainingPlayers()
         cards.getCardList() # gets all cards
@@ -928,7 +1097,7 @@ class Game():
             self.valueList.append(playerCards[x][0]) # takes the values of the cards anf puts it into the seperate lists
 
         self.sortValues(self.valueList) # sorts this list into numerical order
-        self.bestHandValues = self.valueList[2:] # takes the lowest two values and removes them so the top 5 scores are used\
+        self.bestHandValues = self.valueList[2:] # takes the lowest two values and removes them so the top 5 scores are used
         self.totBestHand = sum(self.bestHandValues) # adds all of the values of the cards to calculate their value
         self.isPair(playerValPos)
         self.isTwoPair(playerValPos)
@@ -980,7 +1149,7 @@ class Game():
             return
         # counts the number of times eaach suit appears
     def isStraight(self, playerValPos):
-        for i in range (len(self.valueList)):
+        for i in range(len(self.valueList)):
             if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1 and self.valueList[i-2] - self.valueList[i-3] == 1 and self.valueList[i-3] - self.valueList[i-4] == 1:
                 self.playerValue[playerValPos] = 5
                 self.Straight = True
@@ -999,6 +1168,7 @@ class Game():
         if self.pair == True:
             for x in range(1, 14):
                 if self.valueList.count(x) == 2:
+                    self.twoPairNumber[playerValPos] = x
                     self.playerValue[playerValPos] = 3
                     self.valueList.remove(x)
                     return
@@ -1006,6 +1176,7 @@ class Game():
     def isPair(self, playerValPos):
         for x in range(1, 14):
             if self.valueList.count(x) == 2:
+                self.pairNumber[playerValPos] = x
                 self.playerValue[playerValPos] = 2
                 self.valueList.remove(x)
                 self.pair = True
@@ -1323,8 +1494,8 @@ user = User(0)
 computer1 = Computer(1)
 computer2 = Computer(2)
 computer3 = Computer(3)
-river = River()
 game = Game()
+river = River()
 locationList = {0: [0, user, 567, 600], 1: [1, computer1, 320, 10], 2: [2, computer2, 567, 10], 3: [3, computer3, 810, 10]}
 help = Help()
 menu = Menu()

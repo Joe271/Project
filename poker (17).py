@@ -81,14 +81,14 @@ class Assets(): # All assets but cards
         ## Loading all images
 
         self.back = pygame.image.load("background (2).JPG")
-        self.table = pygame.image.load("table (2).PNG")
-        self.titleBack = pygame.image.load("titleBack.PNG")
+        self.table = pygame.image.load("table (2).fw.PNG")
+        self.titleBack = pygame.image.load("titleBack.fw.PNG")
         self.upBet = pygame.image.load("upBet.fw.PNG")
         self.downBet = pygame.image.load("downBet.fw.PNG")
         self.upBetPress = pygame.image.load("upBetPress.fw.PNG")
         self.downBetPress = pygame.image.load("downBetPress.fw.PNG")
-        self.menuButton = pygame.image.load("menuButton.PNG")
-        self.menuButtonPress = pygame.image.load("menuButtonPress.PNG")
+        self.menuButton = pygame.image.load("menuButton.fw.PNG")
+        self.menuButtonPress = pygame.image.load("menuButtonPress.fw.PNG")
 
         ## Defining fonts
 

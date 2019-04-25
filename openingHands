@@ -1,0 +1,9 @@
+HighPairs = self.Cards[0][0] == self.Cards[1][0] and self.Cards[0][0] >= 11
+MediumPairs = self.Cards[0][0] == self.Cards[1][0] and 8 <= self.Cards[0][0] <= 10
+LowPairs = self.Cards[0][0] == self.Cards[1][0] and 1 <= self.Cards[0][0] <= 7
+StrongAces = self.Cards[0][0] == 13 and self.Cards[1][0] == 12 or self.Cards[1][0] == 13 and self.Cards[0][0] == 12
+MiddleAces = self.Cards[0][0] == 13 or self.Cards[1][0] == 13 and 8 <= self.Cards[0][0] <= 11
+LowSuitedAces = self.Cards[0][0] == 13 or self.Cards[1][0] == 13 and 1 <= self.Cards[0][0] <= 7 and self.Cards[0][1] == self.Cards[1][1]
+SuitedPictures = self.Cards[0][1] == self.Cards[1][1] and 9 <= self.Cards[0][0] <= 13 and 9 <= self.Cards[1][0] <= 13
+OffSuitedPic = self.Cards[0][1] != self.Cards[1][1] and 9 <= self.Cards[0][0] <= 13 and 9 <= self.Cards[1][0] <= 13
+SuitedConnectors = self.Cards[0][0] == self.Cards[1][0] + 1 or self.Cards[1][0] == self.Cards[0][0] + 1 and self.Cards[0][1] == self.Cards[1][1]
