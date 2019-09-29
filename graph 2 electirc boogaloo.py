@@ -74,17 +74,3 @@ def finalBfs(currentGraph, vertex):
 
 visitedList = finalBfs(currentGraph, "Root")
 print(visitedList[-1])
-
-potentialGraph = {
-"Root": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-1: ["Fold"],
-2: ["Fold"],
-3: ["Call"],
-4: ["Call"],
-5: ["Call"],
-6: ["Call"],
-7: ["Bet"],
-8: ["Bet"],
-9: ["Bet"],
-10: ["Bet"]
-}

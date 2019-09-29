@@ -5,7 +5,6 @@ import pygame
 import sys
 import time
 from pygame.locals import *
-import pdb
 
 pygame.init()
 pygame.font.init()
@@ -40,24 +39,26 @@ class Cards():
         self.cardList = [] # creates empty list cardList which will store the cards
         for number in range(13): # loops through the cardList construction
             if number == 0: # for the first item (ace) the value is the highest but the number on the card is lowest
-                self.cardList.append([self.aceValue, "C", "C"+str(number+1)+".JPG"]) # Changed order from F, S, V to V, S, F
+                self.cardList.append([self.aceValue, "C", "Assets/C"+str(number+1)+".JPG"]) # Changed order from F, S, V to V, S, F
             else: # adds the rest of the suit (2-K)to the cardList
-                self.cardList.append([number, "C" , "C"+str(number+1)+".JPG"])
+                self.cardList.append([number, "C" , "Assets/C"+str(number+1)+".JPG"])
         for number in range(13): # runs 4 times to add each suit
             if number == 0:
-                self.cardList.append([self.aceValue, "D", "D"+str(number+1)+".JPG"])
+                self.cardList.append([self.aceValue, "D", "Assets/D"+str(number+1)+".JPG"])
             else:
-                self.cardList.append([number, "D", "D"+str(number+1)+".JPG"])
+                self.cardList.append([number, "D", "Assets/D"+str(number+1)+".JPG"])
         for number in range(13):
             if number == 0:
-                self.cardList.append([self.aceValue, "H", "H"+str(number+1)+".JPG"])
+                self.cardList.append([self.aceValue, "H", "Assets/H"+str(number+1)+".JPG"])
             else:
-                self.cardList.append([number, "H", "H"+str(number+1)+".JPG"])
+                self.cardList.append([number, "H", "Assets/H"+str(number+1)+".JPG"])
         for number in range(13):
             if number == 0:
-                self.cardList.append([self.aceValue, "S", "S"+str(number+1)+".JPG"])
+                self.cardList.append([self.aceValue, "S", "Assets/S"+str(number+1)+".JPG"])
             else:
-                self.cardList.append([number, "S", "S"+str(number+1)+".JPG"])
+                self.cardList.append([number, "S", "Assets/S"+str(number+1)+".JPG"])
+
+        print(self.cardList)
 
 class Dealer():
     def __init__(self):
@@ -141,7 +142,7 @@ class User(Player):
                                 screen.blit(assets.betButtonText, (self.betButtonTextX, self.betButtonTextY)) # ^^
                                 pygame.display.update()
                                 self.makeBet() # calls the function that allows the user to increase their bet
-                                game.moveList[self.locPos] = "bet"
+                                game.previousMove = "Bet"
                                 return
 
                         if pygame.mouse.get_pos()[0] >= self.betButtonX1 and pygame.mouse.get_pos()[1] >= self.callButtonY1:  # Call button
@@ -154,7 +155,7 @@ class User(Player):
                                 screen.blit(assets.callButtonText, (self.betButtonTextX, self.callButtonTextY))
                                 pygame.display.update()
                                 self.call()
-                                game.moveList[self.locPos] = "call"
+                                game.previousMove = "Call"
                                 return
                                 # this button will allow the user to match the previous bet as this is the minimum they have to bet without folding
 
@@ -168,7 +169,7 @@ class User(Player):
                                 screen.blit(assets.foldButtonText, (self.foldButtonTextX, self.betButtonTextY))
                                 pygame.display.update()
                                 self.fold()
-                                game.moveList[self.locPos] = "fold"
+                                game.previousMove = "Fold"
                                 return # this will allow the user to get out of the round if they think that they cannot win
 
     def makeBet(self): # the function allowing the user to increase their bet
@@ -232,6 +233,7 @@ class User(Player):
                             self.betting = False
                             # if the user clicks the number to increase this amount will be added to their bet and then the next player will have their turn
 
+
     def call(self):
         if self.bet == game.previousBet:
             self.check()
@@ -256,7 +258,7 @@ class User(Player):
         self.foldThisTurn = True
         game.remainingPlayers[self.locPos] = 10
         game.remainingList[self.locPos] = 10
-        game.blankCards(user)
+        game.blankCards("user")
         game.updateUserChips()
         game.updatePot()
 
@@ -287,47 +289,48 @@ class Computer(Player):
         9: ["9Fold", "9Bet", "9Call"],
         10: ["10Fold", "10Bet", "10Call"],
         # What to do
-        "1Bet": [self.fold()],
-        "1Call": [self.fold()],
-        "1Fold": [self.fold()],
-        "2Bet": [self.fold()],
-        "2Call": [self.fold()],
-        "2Fold": [self.fold()],
-        "3Bet": [self.fold()],
-        "3Call": [self.fold()],
+        "1Bet": "fold",
+        "1Call": "fold",
+        "1Fold": "fold",
+        "2Bet": "fold",
+        "2Call": "fold",
+        "2Fold": "fold",
+        "3Bet": "fold",
+        "3Call": "fold",
 
-        "2Fold": [self.call()],
-        "3Fold": [self.call()],
-        "4Fold": [self.call()],
-        "4Call": [self.call()],
-        "4Bet": [self.call()],
-        "5Call": [self.call()],
-        "5Fold": [self.call()],
-        "5Bet": [self.call()],
-        "6Bet": [self.call()],
-        "7Bet": [self.call()],
-        "8Bet": [self.call()],
+        "2Fold": "call",
+        "3Fold": "call",
+        "4Fold": "call",
+        "4Call": "call",
+        "4Bet": "call",
+        "5Call": "call",
+        "5Fold": "call",
+        "5Bet": "call",
+        "6Bet": "call",
+        "7Bet": "call",
+        "8Bet": "call",
 
-        "6Call": [self.computerBet()],
-        "6Fold": [self.computerBet()],
-        "7Call": [self.computerBet()],
-        "7Fold": [self.computerBet()],
-        "8Fold": [self.computerBet()],
-        "9Bet": [self.computerBet()],
-        "9Call": [self.computerBet()],
-        "9Fold": [self.computerBet()],
-        "10Bet": [self.computerBet()],
-        "10Call": [self.computerBet()],
-        "10Fold": [self.computerBet()],
+        "6Call": "`self.computerBet",
+        "6Fold": "computerBet",
+        "7Call": "computerBet",
+        "7Fold": "computerBet",
+        "8Fold": "computerBet",
+        "9Bet": "computerBet",
+        "9Call": "computerBet",
+        "9Fold": "computerBet",
+        "10Bet": "computerBet",
+        "10Call": "computerBet",
+        "10Fold": "computerBet",
 
-        self.computerBet(): [],
-        self.call(): [],
-        self.fold(): []
+        "computerBet": [],
+        "call": [],
+        "fold": []
         }
 
     def potentialGraphFun(self):
         self.potentialGraph = {
-        "Root": [0, 1, 2, 3, 4, 5]
+        "Root": [0, 1, 2, 3, 4, 5],
+
         0: ["0Fold", "0Bet", "0Call"],
         1: ["1Fold", "1Bet", "1Call"],
         2: ["2Fold", "2Bet", "2Call"],
@@ -336,33 +339,33 @@ class Computer(Player):
         5: ["5Fold", "5Bet", "5Call"],
         6: ["6Fold", "6Bet", "6Call"],
 
-        "0Bet": [self.fold()],
-        "0Call": [self.fold()],
-        "1Bet": [self.fold()],
-        "2Bet": [self.fold()],
+        "0Bet": "fold",
+        "1Bet": "fold",
 
-        "0Fold": [self.call()],
-        "1Call": [self.call()],
-        "1Fold": [self.call()],
-        "2Call": [self.call()],
-        "3Bet": [self.call()],
-        "3Call": [self.call()],
-        "3Fold": [self.call()],
-        "4Bet": [self.call()],
-        "4Call": [self.call()],
-        "5Bet": [self.call()],
+        "0Call": "call",
+        "2Bet": "call",
+        "0Fold": "call",
+        "1Call": "call",
+        "1Fold": "call",
+        "2Call": "call",
+        "3Bet": "call",
+        "3Call": "call",
+        "3Fold": "call",
+        "4Bet": "call",
+        "4Call": "call",
+        "5Bet": "call",
 
-        "2Fold": [self.computerBet()],
-        "4Fold": [self.computerBet()],
-        "5Call": [self.computerBet()],
-        "5Fold": [self.computerBet()],
-        "6Bet": [self.computerBet()],
-        "6Call": [self.computerBet()],
-        "6Fold": [self.computerBet()],
+        "2Fold": "computerBet",
+        "4Fold": "computerBet",
+        "5Call": "computerBet",
+        "5Fold": "computerBet",
+        "6Bet": "computerBet",
+        "6Call": "computerBet",
+        "6Fold": "computerBet",
 
-        self.computerBet(): [],
-        self.call(): [],
-        self.fold(): []
+        "computerBet": [],
+        "call": [],
+        "fold": []
         }
 
     def getPotentialScore(self, stage, currentRiverDisplayed):
@@ -390,11 +393,11 @@ class Computer(Player):
 
     def isMonster(self):
         if self.currentScore > 2:
-            self.potentialValue = 5
+            self.potentialValue = 6
 
     def isStrongMade(self):
         if self.currentScore == 2 and game.pairNumber[self.locPos] >= cards.nineValue:
-            self.potentialValue = 3
+            self.potentialValue = 4
 
     def isMarginalMade(self):
         if self.currentScore == 2 and game.pairNumber[self.locPos] < cards.nineValue:
@@ -402,26 +405,26 @@ class Computer(Player):
 
     def isVeryStrongDraw(self):
         if self.suitList.count("C") == 4 or self.suitList.count("D") == 4 or self.suitList.count("H") == 4 or self.suitList.count("S") == 4:
-            self.potentialValue = 4
+            self.potentialValue = 5
             for i in range(len(self.valueList)):
                 if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1 and self.valueList[i-2] - self.valueList[i-3] == 1:
-                    self.potentialValue = 5
+                    self.potentialValue = 6
 
     def isStrongDraw(self):
         for i in range(len(self.valueList)):
             if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1 and self.valueList[i-2] - self.valueList[i-3] == 1:
-                self.potentialValue = 4
+                self.potentialValue = 5
 
         if self.suitList.count("C") == 3 or self.suitList.count("D") == 3 or self.suitList.count("H") == 3 or self.suitList.count("S") == 3:
-            for x in range(len(self.valueList)):
+            for i in range(len(self.valueList)):
                 if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1:
-                    self.potentialValue = 4
+                    self.potentialValue = 3
 
     def isWeakDraw(self):
         if self.suitList.count("C") == 3 or self.suitList.count("D") == 3 or self.suitList.count("H") == 3 or self.suitList.count("S") == 3:
             self.potentialValue = 1
 
-        for x in range(len(self.valueList)):
+        for i in range(len(self.valueList)):
             if self.valueList[i] - self.valueList[i-1] == 1 and self.valueList[i-1] - self.valueList[i-2] == 1:
                 self.potentialValue = 1
 
@@ -450,39 +453,44 @@ class Computer(Player):
         self.getPotentialScore(game.stage, game.currentRiverDisplayed)
         self.getMaxBets()
         self.currentGraphFun()
-        self.currentInfoList = ["Root", self.currentScore, str(self.currentScore)+game.previousMove]
+        self.potentialGraphFun()
+        self.potentialValue = 0
         if self.isFolded == True or self.Chips == 0:
             self.foldThisTurn = False
             return
 
         elif self.isFolded == False:
-            if self.stage == 4:
+            if game.stage == 4:
+                self.currentInfoList = ["Root", self.currentScore, str(self.currentScore)+game.previousMove]
                 self.computerSelection(self.currentGraph, "Root")
             else:
+                self.currentInfoList = ["Root", self.potentialValue, str(self.potentialValue)+game.previousMove]
                 self.computerSelection(self.potentialGraph, "Root")
+
+            if len(self.moves) == 4:
+                getattr(self, self.moves[-1])()
 
         if self.bet != 0:
             game.previousBet = self.bet
 
     def computerSelection(self, Graph, vertex):
         queue = [vertex]
-        moves = []
+        self.moves = []
         while queue:
             currentNode = queue.pop(0)
             if currentNode in self.currentInfoList:
-                moves.append(currentNode)
+                self.moves.append(currentNode)
                 # try:
-                # pdb.set_trace()
-                print(Graph)
-                print(currentNode)
+                # # print(Graph)
+                # # print(currentNode)
                 neighbours = Graph[currentNode]
                 for neigbour in neighbours:
                     queue.append(neigbour)
-                    if len(moves) == 3 and neighbours == [self.call()] or neighbours == [self.fold()] or neighbours == [self.computerBet()]:
-                        moves.extend(neighbours)
+                    if len(self.moves) == 3 and neighbours == "call" or neighbours == "fold" or neighbours == "computerBet":
+                        self.moves.append(neighbours)
                 # except:
-                #     print(currentNode)
-        return moves
+                #     # print(currentNode)
+        return self.moves
 
     def getMaxBets(self):
         if game.playerValue[self.locPos] <= 1:
@@ -510,21 +518,20 @@ class Computer(Player):
         return
 
     def fold(self):
-        print(game.remainingPlayers[self.locPos][1])
         dealer.pot = dealer.pot + self.bet
         self.Cards = ["", ""]
         self.bet = 0
         self.handValue = 0
         self.isFolded = True
         self.foldThisTurn = True
-        game.blankCards(game.remainingPlayers[self.locPos][1])
+        game.blankCards(game.remainingPlayers[self.locPos][4])
         game.updateUserChips()
         game.updatePot()
         #del game.remainingPlayers[self.locPos]
         #game.remainingList.remove(self.locPos)
-        game.remainingPlayers[self.locPos] = 10
+        game.remainingPlayers[self.locPos][0] = 10
         game.remainingList[self.locPos] = 10
-        game.previousMove = "fold"
+        game.previousMove = "Fold"
 
     def call(self):
         if self.bet == game.previousBet:
@@ -547,7 +554,7 @@ class Computer(Player):
         if self.Chips < 0:
             self.bet = self.bet + (self.bet + self.Chips)
 
-        game.previousMove = "call"
+        game.previousMove = "Call"
 
     def check(self): # will just pass to the next player or onto the next cards from the river
         return
@@ -572,7 +579,7 @@ class Computer(Player):
             game.remainingPlayers[self.locPos] = 10
             game.remainingList[self.locPos] = 10
 
-        game.previousMove = "bet"
+        game.previousMove = "Bet"
 
 class River():
     def __init__(self):
@@ -694,7 +701,6 @@ class Game():
         self.restart() # sets all variables to their original value at the start of the game
 
     def getCards(self): # calls all of the functions that gives the players cards
-
         for x in range(len(self.remainingList)):
             if self.remainingList[x] == 10:
                 pass
@@ -705,24 +711,24 @@ class Game():
         river.getRiverCards()
 
     def blankCards(self, playerToUpdate):
-        if playerToUpdate == user or playerToUpdate == all:
+        if playerToUpdate == "user" or playerToUpdate == "all":
             for x in range(2):
                 screen.blit(assets.blankCard, (self.playerCardsX, user.betButtonY1))
                 self.playerCardsX = self.playerCardsX + self.cardWidth
 
         self.playerCardsX = 567
 
-        if playerToUpdate == computer2 or playerToUpdate == all:
+        if playerToUpdate == "computer2" or playerToUpdate == "all":
             for x in range(2):
                 screen.blit(assets.blankCard, (self.playerCardsX, self.compCardY))
                 self.playerCardsX = self.playerCardsX + self.cardWidth
 
-        if playerToUpdate == computer1 or playerToUpdate == all:
+        if playerToUpdate == "computer1" or playerToUpdate == "all":
             for x in range(2):
                 screen.blit(assets.blankCard, (self.comp1X, self.compCardY))
                 self.comp1X = self.comp1X + self.cardWidth
 
-        if playerToUpdate == computer3 or playerToUpdate == all:
+        if playerToUpdate == "computer3" or playerToUpdate == "all":
             for x in range(2):
                 screen.blit(assets.blankCard, (self.comp3X, self.compCardY))
                 self.comp3X = self.comp3X + self.cardWidth
@@ -763,6 +769,9 @@ class Game():
             if each == 10:
                 pass
             else:
+                # # print("DC each", each)
+                # # print("DC", self.remainingList)
+                # # print("DC", self.remainingPlayers)
                 self.currentPlayer = self.remainingPlayers[self.remainingList[each]]
                 self.currentPlayerX = self.remainingPlayers[self.remainingList[each]][2]
                 self.currentPlayerY = self.remainingPlayers[self.remainingList[each]][3]
@@ -793,7 +802,7 @@ class Game():
     def getDealerButtonLocation(self):
         self.restart()
         self.remainingList = list(self.remainingPlayers)
-        self.dealerButtonLocation = random.randint(0, 3)
+        self.dealerButtonLocation = 0 # random.randint(0, 3)
         if self.dealerButtonLocation == 3:
             self.dealerButtonLocation = -1
 
@@ -809,37 +818,36 @@ class Game():
             self.getBlinds() # the main start to each game by starting the blind bets of the two palyers after the dealer button (WIP)
 
             for stage in self.stageList: # 4 is the number of stages (pre,  flop, turn, river)
-                self.moveList = ["", "", "", ""]
-                for z in range(4 - self.remainingList.count(10)): # goes through each player still available
-                    while self.betsEqual == False:
-                        if self.remainingList.count(10) == 3: # if there is only one palyer left not folded
-                            self.foldWinnerIndex = [i for i, x in enumerate(self.remainingList) if x != 10]
-                            self.foldWinner = self.remainingPlayers[self.foldWinnerIndex[0]][1]
-                            self.foldWinner.Chips = self.foldWinner.Chips + self.foldWinner.bet + dealer.pot
-                            self.foldWinner.bet = 0
-                            dealer.pot = 0
-                            self.updateUserChips()
-                            self.updateComputersChips()
-                            self.updatePot()
-                            self.playGame()
+                self.count = 0
+                #for z in range(4 - self.remainingList.count(10)): # goes through each player still available
+                while self.betsEqual == False:
+                    self.count = self.count + 1
+                    if self.playerTurn >= 4:
+                        self.playerTurn = 0
+                    if self.remainingList[self.playerTurn] != 10:
+                        self.thisPlayer = self.remainingPlayers[self.remainingList[self.playerTurn]][1]
+                        self.thisPlayer.nextTurn(stage)
+                    self.updateUserChips()
+                    self.updateComputersChips()
+                    #if self.thisPlayer.isFolded == True and self.thisPlayer.foldThisTurn == False or self.thisPlayer.isFolded == False:
+                    self.playerTurn = self.playerTurn + 1
+                    if self.count > (4 - self.remainingList.count(10)):
+                        self.isEqual()
+                    if self.thisPlayer.bet != 0:
+                        self.previousBet = self.thisPlayer.bet
 
-                        # print("T", self.playerTurn)
-                        # print("RL", self.remainingList)
-                        # print("RP", self.remainingPlayers)
-                        if self.playerTurn >= 4:
-                            self.playerTurn = 0
-                        # print("test", self.remainingList[self.playerTurn])
-                        if self.remainingList[self.playerTurn] != 10:
-                            self.thisPlayer = self.remainingPlayers[self.remainingList[self.playerTurn]][1]
-                            self.thisPlayer.nextTurn(stage)
+                    if self.remainingList.count(10) == 3: # if there is only one palyer left not folded
+                        self.foldWinnerIndex = [i for i, x in enumerate(self.remainingList) if x != 10]
+                        self.foldWinner = self.remainingPlayers[self.foldWinnerIndex[0]][1]
+                        self.foldWinner.Chips = self.foldWinner.Chips + self.foldWinner.bet + dealer.pot
+                        self.foldWinner.bet = 0
+                        dealer.pot = 0
                         self.updateUserChips()
                         self.updateComputersChips()
-                        #if self.thisPlayer.isFolded == True and self.thisPlayer.foldThisTurn == False or self.thisPlayer.isFolded == False:
-                        self.playerTurn = self.playerTurn + 1
-                        self.isEqual()
-                        if self.thisPlayer.bet != 0:
-                            self.previousBet = self.thisPlayer.bet
-                        time.sleep(1)
+                        self.updatePot()
+                        self.playGame()
+
+                    time.sleep(1)
 
                 self.endStage()
 
@@ -882,11 +890,11 @@ class Game():
 
     def isEqual(self):
         self.matchBet = 0
-        # print("T", self.playerTurn)
-        # print("RL", self.remainingList)
-        # print("L", len(self.remainingList))
-        # print("RP", self.remainingPlayers)
-        # print("test", self.remainingList[self.playerTurn])
+        # # print("T", self.playerTurn)
+        # # print("RL", self.remainingList)
+        # # print("L", len(self.remainingList))
+        # # print("RP", self.remainingPlayers)
+        # # print("test", self.remainingList[self.playerTurn])
         for x in range(len(self.remainingPlayers)):
             if self.remainingList[x] == 10:
                 pass
@@ -937,21 +945,26 @@ class Game():
             self.tempLocation = 0
         elif self.tempLocation == 5:
             self.tempLocation = 1
+        elif self.tempLocation == 3:
+            self.tempLocation = -1
 
         if self.remainingList[self.tempLocation] == 10:
             self.tempLocation = self.tempLocation + 1
 
         self.smallBlinder = self.remainingPlayers[self.remainingList[self.tempLocation]]
+
         if self.tempLocation + 1 == (len(self.remainingList) + 1):
             self.tempLocation = 0
         else:
             self.tempLocation = self.tempLocation
 
-        if self.tempLocation == 3:
-            self.tempLocation = -1
+
         if self.remainingList[self.tempLocation + 1] == 10:
             self.tempLocation = self.tempLocation + 1
 
+        # print("Blind RP", self.remainingPlayers)
+        # print("BLind RL", self.remainingList)
+        # print("Blind tL", self.tempLocation)
 
         self.bigBlinder = self.remainingPlayers[self.remainingList[self.tempLocation + 1]]
         self.smallBlindFunction(self.smallBlinder[1])
@@ -973,7 +986,7 @@ class Game():
             self.playerTurn = self.remainingList.index(self.playerTurn) + 1
 
         self.previousBet = 100
-        self.previousMove = "call"
+        self.previousMove = "Call"
 
     def smallBlindFunction(self, smallBlindPlayer):
         smallBlindPlayer.bet = smallBlindPlayer.bet + self.smallBlind
@@ -986,9 +999,9 @@ class Game():
     def constructRemainingPlayers(self):
         for x in range(4):
             if self.allPlayers[x][1].Chips > 0:
-                self.remainingPlayers.update({x : [x, self.allPlayers[x][1], self.allPlayers[x][2], self.allPlayers[x][3]]})
+                self.remainingPlayers.update({x : [x, self.allPlayers[x][1], self.allPlayers[x][2], self.allPlayers[x][3], self.allPlayers[x][4]]})
             elif self.allPlayers[x][1].Chips <= 0:
-                self.remainingPlayers.update({10 : [10, self.allPlayers[x][1], self.allPlayers[x][2], self.allPlayers[x][3]]})
+                self.remainingPlayers.update({10 : [10, self.allPlayers[x][1], self.allPlayers[x][2], self.allPlayers[x][3], self.allPlayers[x][4]]})
 
     def restart(self):
 
@@ -1011,7 +1024,7 @@ class Game():
         self.playerTurn = 0 # determines which players turn it is starts at 0
         self.playerValue = [0, 0, 0, 0] # list of the different hand values for the players
         self.previousBet = 0 # the bet of the player before so that the the next player can call
-        self.allPlayers = {0: [0, user, self.playerCardsX, 600], 1: [1, computer1, self.comp1X, 10], 2: [2, computer2, self.playerCardsX, 10], 3: [3, computer3, self.comp3X, 10]}
+        self.allPlayers = {0: [0, user, self.playerCardsX, 600, "user"], 1: [1, computer1, self.comp1X, 10, "computer1"], 2: [2, computer2, self.playerCardsX, 10, "computer2"], 3: [3, computer3, self.comp3X, 10, "computer3"]}
         self.remainingPlayers = {}
         self.stage = 1 # 0 = pre 1 = flop 2 = turn 3 = river
         self.betsEqual = False
@@ -1020,6 +1033,7 @@ class Game():
         self.previousMove = ""
         self.pairNumber = ["", "", "", ""]
         self.twoPairNumber = ["", "", "", ""]
+        self.count = 0
 
         self.constructRemainingPlayers()
         cards.getCardList() # gets all cards
@@ -1496,7 +1510,7 @@ computer2 = Computer(2)
 computer3 = Computer(3)
 game = Game()
 river = River()
-locationList = {0: [0, user, 567, 600], 1: [1, computer1, 320, 10], 2: [2, computer2, 567, 10], 3: [3, computer3, 810, 10]}
+locationList = {0: [0, user, 567, 600, "user"], 1: [1, computer1, 320, 10, "computer1"], 2: [2, computer2, 567, 10, "computer2"], 3: [3, computer3, 810, 10, "computer3"]}
 help = Help()
 menu = Menu()
 
